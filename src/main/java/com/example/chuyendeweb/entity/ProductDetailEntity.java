@@ -13,13 +13,12 @@ import javax.persistence.*;
 @ToString
 @Entity
 @Table(name = "ProductDetail")
-public class ProductDetalEntity extends BaseEntity {
+public class ProductDetailEntity extends BaseEntity {
     @Column
     private String sourceOrigin;
     @Column
-    private String nameProduct;
+    private String name;
     @Column
-
     private String descriptions;
     @OneToOne(mappedBy = "productDetalEntity")
     private ProductEntity productEntity;

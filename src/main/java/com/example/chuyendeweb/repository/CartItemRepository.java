@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CartItemRespository extends JpaRepository<CartItemEntity, Long> {
+public interface CartItemRepository extends JpaRepository<CartItemEntity, Long> {
     CartItemEntity findByCartEntityAndProductEntities(CartEntity cartEntity, ProductEntity productEntity);
     void delete(CartItemEntity cartItemEntity);
 

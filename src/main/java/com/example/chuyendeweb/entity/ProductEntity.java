@@ -26,7 +26,7 @@ public class ProductEntity extends BaseEntity implements Serializable {
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "productDetailId", referencedColumnName = "id")
-    private ProductDetalEntity productDetalEntity;
+    private ProductDetailEntity productDetalEntity;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "categoryId")

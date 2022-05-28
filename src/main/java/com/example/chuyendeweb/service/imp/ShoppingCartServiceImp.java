@@ -7,9 +7,9 @@ import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.ChangeToCartReq;
 import com.example.chuyendeweb.model.response.ChangeToCartResponse;
-import com.example.chuyendeweb.repository.CartItemRespository;
-import com.example.chuyendeweb.repository.CartRespository;
-import com.example.chuyendeweb.repository.ProductRespository;
+import com.example.chuyendeweb.repository.CartItemRepository;
+import com.example.chuyendeweb.repository.CartRepository;
+import com.example.chuyendeweb.repository.ProductRepository;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IShoppingCartService;
 import com.example.chuyendeweb.service.IUserService;
@@ -29,11 +29,11 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
     @Autowired
     IUserService iUserService;
     @Autowired
-    CartRespository cartRespository;
+    CartRepository cartRespository;
     @Autowired
-    CartItemRespository cartItemRespository;
+    CartItemRepository cartItemRespository;
     @Autowired
-    ProductRespository productRespository;
+    ProductRepository productRespository;
     @Autowired
     ModelMapper mapper;
     @Override

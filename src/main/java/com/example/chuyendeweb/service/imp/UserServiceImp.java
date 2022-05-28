@@ -10,7 +10,7 @@ import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.LogOutRequest;
 import com.example.chuyendeweb.model.request.RegisterReq;
 import com.example.chuyendeweb.model.request.ResetPasswordRequest;
-import com.example.chuyendeweb.repository.CartRespository;
+import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.RefreshTokenRepository;
 import com.example.chuyendeweb.repository.RoleRepository;
 import com.example.chuyendeweb.repository.UserRepository;
@@ -38,7 +38,7 @@ public class UserServiceImp implements IUserService {
     @Autowired
     RoleRepository roleRepository;
     @Autowired
-    CartRespository cartRespository;
+    CartRepository cartRespository;
     @Autowired
     private SendEmailUtils sendEmailUtils;
     @Autowired

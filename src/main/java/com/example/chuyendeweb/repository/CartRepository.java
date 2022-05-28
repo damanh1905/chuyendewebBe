@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 
 
 
+
 @Repository
-public interface CartRespository  extends JpaRepository<CartEntity,Long> {
+public interface CartRepository extends JpaRepository<CartEntity,Long> {
         @Query("SELECT c FROM CartEntity c where  c.userEntity = ?1")
         CartEntity findByLastModified(UserEntity user);
-
         CartEntity findByUserEntity(UserEntity userEntity);
 }
