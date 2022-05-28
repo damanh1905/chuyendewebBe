@@ -107,7 +107,19 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
 
     @Override
     public Set<ChangeToCartResponse> showCart(CustomUserDetails userDetails) {
-        return null;
+        UserEntity userEntity = iUserService.findById(userDetails.getId());
+        CartEntity cartEntity = cartRespository.findByUserEntity(userEntity);
+        if(cartEntity == null){
+            cartEntity = new CartEntity(new Date(),userEntity);
+            cartRespository.save(cartEntity);
+        }
+        Set<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
+        Set<ChangeToCartResponse> result = new HashSet<>();
+        for (CartItemEntity cartItemEntity:cartItemEntities) {
+            ChangeToCartResponse toCartResponse = this.mapper.map(cartItemEntity,ChangeToCartResponse.class);
+            result.add(toCartResponse);
+        }
+        return result;
     }
 
 
