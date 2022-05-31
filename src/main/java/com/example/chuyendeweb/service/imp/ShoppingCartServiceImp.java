@@ -10,7 +10,7 @@ import com.example.chuyendeweb.model.response.ChangeToCartResponse;
 import com.example.chuyendeweb.repository.CartItemRepository;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.ProductRepository;
-import com.example.chuyendeweb.security.CustomUserDetails;
+import com.example.chuyendeweb.repository.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IShoppingCartService;
 import com.example.chuyendeweb.service.IUserService;
 import org.modelmapper.ModelMapper;
@@ -60,6 +60,20 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
                     }else{
                         updatingCartItemEntity = new CartItemEntity(updatingProduct
                                 ,changeToCartReq.getQuantity(),totalCartItem,foundCart);
+                    }
+                    this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
+                    break;
+                case "plus":
+                        updatingCartItemEntity.setQuantity(changeToCartReq.getQuantity());
+                        updatingCartItemEntity.setTotalPrice(totalCartItem);
+                    this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
+                    break;
+                case "minus":
+                    if(changeToCartReq.getQuantity() >0) {
+                        updatingCartItemEntity.setQuantity(changeToCartReq.getQuantity());
+                        updatingCartItemEntity.setTotalPrice(totalCartItem);
+                    }else{
+                        throw  new NotFoundException("quantity must be greater than 0");
                     }
                     this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
                     break;

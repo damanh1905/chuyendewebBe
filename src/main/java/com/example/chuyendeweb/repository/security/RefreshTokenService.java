@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.security;
+package com.example.chuyendeweb.repository.security;
 
 import com.example.chuyendeweb.entity.RefreshTokenEntity;
 import com.example.chuyendeweb.exception.TokenRefreshException;

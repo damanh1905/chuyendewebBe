@@ -1,6 +1,6 @@
 package com.example.chuyendeweb.filter;
 
-import com.example.chuyendeweb.security.JwtUserDetailsService;
+import com.example.chuyendeweb.repository.security.JwtUserDetailsService;
 import com.example.chuyendeweb.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

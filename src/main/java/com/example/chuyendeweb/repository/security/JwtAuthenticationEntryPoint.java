@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.security;
+package com.example.chuyendeweb.repository.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

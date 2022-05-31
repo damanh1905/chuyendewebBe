@@ -2,8 +2,7 @@ package com.example.chuyendeweb.service;
 
 import com.example.chuyendeweb.model.request.ChangeToCartReq;
 import com.example.chuyendeweb.model.response.ChangeToCartResponse;
-import com.example.chuyendeweb.security.CustomUserDetails;
-import org.springframework.stereotype.Service;
+import com.example.chuyendeweb.repository.security.CustomUserDetails;
 
 import java.util.List;
 import java.util.Set;

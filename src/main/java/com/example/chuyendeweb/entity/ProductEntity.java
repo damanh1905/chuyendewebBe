@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "product")
-public class ProductEntity extends BaseEntity implements Serializable {
+public class ProductEntity extends BaseEntity {
     @Column
     private int Price;
     @Column
@@ -23,10 +23,12 @@ public class ProductEntity extends BaseEntity implements Serializable {
     private int amount;
     @Column
     private boolean isNew;
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "productDetailId", referencedColumnName = "id")
-    private ProductDetailEntity productDetalEntity;
+    @Column
+    private String sourceOrigin;
+    @Column
+    private String name;
+    @Column
+    private String descriptions;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "categoryId")

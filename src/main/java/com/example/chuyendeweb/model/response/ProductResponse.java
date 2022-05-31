@@ -1,13 +1,9 @@
 package com.example.chuyendeweb.model.response;
 
 
-import com.example.chuyendeweb.entity.CategoryEntity;
-import com.example.chuyendeweb.entity.ProductDetailEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,7 +14,9 @@ public class ProductResponse {
     private int Price_Sale;
     private int amount;
     private boolean isNew;
-    private ProductDetailResponse productDetailResponse;
+    private String sourceOrigin;
+    private String name;
+    private String descriptions;
     private CategoryResponse categoryResponse;
 
 }

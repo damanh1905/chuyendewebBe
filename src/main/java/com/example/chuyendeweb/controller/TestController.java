@@ -1,16 +1,12 @@
 package com.example.chuyendeweb.controller;
 
-import com.example.chuyendeweb.exception.NotFoundException;
-import com.example.chuyendeweb.security.CustomUserDetails;
-import com.example.chuyendeweb.util.JwtUtils;
+import com.example.chuyendeweb.repository.security.CustomUserDetails;
 import com.example.chuyendeweb.util.SendEmailUtils;
 import com.example.chuyendeweb.util.SiteUrlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -71,4 +67,5 @@ public class TestController {
 
         return "Public Content.";
     }
+
 }

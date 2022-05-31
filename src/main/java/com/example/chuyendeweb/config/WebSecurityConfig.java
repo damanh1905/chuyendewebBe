@@ -1,8 +1,8 @@
 package com.example.chuyendeweb.config;
 
 import com.example.chuyendeweb.filter.JwtRequestFilter;
-import com.example.chuyendeweb.security.JwtAuthenticationEntryPoint;
-import com.example.chuyendeweb.security.JwtUserDetailsService;
+import com.example.chuyendeweb.repository.security.JwtAuthenticationEntryPoint;
+import com.example.chuyendeweb.repository.security.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

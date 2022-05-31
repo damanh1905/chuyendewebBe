@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.security;
+package com.example.chuyendeweb.repository.security;
 
 import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.repository.UserRepository;

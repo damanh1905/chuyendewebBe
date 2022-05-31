@@ -6,8 +6,8 @@ import com.example.chuyendeweb.model.request.*;
 import com.example.chuyendeweb.model.response.JwtResponse;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.model.response.TokenRefreshResponse;
-import com.example.chuyendeweb.security.CustomUserDetails;
-import com.example.chuyendeweb.security.RefreshTokenService;
+import com.example.chuyendeweb.repository.security.CustomUserDetails;
+import com.example.chuyendeweb.repository.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
 import com.example.chuyendeweb.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +128,11 @@ public class AuthController {
             return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Log out successful!", ""));
         }
         return ResponseEntity.ok(new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Log out fail!", ""));
+    }
+    @PostMapping("/test")
+    public String tesst(@RequestBody LoginReq loginReq){
+        return "thien";
+
     }
 }
 
