@@ -44,7 +44,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
             foundCart = new CartEntity(new Date(),userEntity);
             this.cartRespository.save(foundCart);
         }
-        ProductEntity updatingProduct = this.productRespository.findById(changeToCartReq.getProductId()).get();
+        ProductEntity updatingProduct =  this.productRespository.findById(changeToCartReq.getProductId()).get();
         if (updatingProduct == null) {
             throw  new NotFoundException("not found product");
         }
@@ -96,7 +96,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
           this.cartRespository.save(cartEntity);
       }
         for (ChangeToCartReq changeToCartReq:changeToCartReqList) {
-            ProductEntity productEntity = this.productRespository.findById(changeToCartReq.getProductId()).get();
+            ProductEntity productEntity =  this.productRespository.findById(changeToCartReq.getProductId()).get();
             CartItemEntity foundCartItemEntity = this.cartItemRespository.findByCartEntityAndProductEntities(cartEntity,productEntity);
             if(foundCartItemEntity != null){
               int  totalCartItem = foundCartItemEntity.getTotalPrice() +(productEntity.getPrice()* changeToCartReq.getQuantity());
