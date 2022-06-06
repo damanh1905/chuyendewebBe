@@ -11,6 +11,9 @@ import java.io.IOException;
 public interface IUserService {
     UserEntity findById(Long id);
 
+    boolean finByUserName(String username);
+    boolean finByEmail(String email);
+
     String registerUser(RegisterReq RegisterReq) throws MessagingException, IOException;
 
     boolean verify(String verificationCode);

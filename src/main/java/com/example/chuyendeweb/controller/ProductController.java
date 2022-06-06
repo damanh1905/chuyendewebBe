@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 360)
+//@CrossOrigin(origins = "*", maxAge = 360)
 @RequestMapping("api/product")
     public class ProductController {
     @Autowired
@@ -34,6 +35,7 @@ import java.util.Map;
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "product detail ", result));
 
     }
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/ShowAndsearch")
     public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = false) String searchValue,
            @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "10") int pageSize){

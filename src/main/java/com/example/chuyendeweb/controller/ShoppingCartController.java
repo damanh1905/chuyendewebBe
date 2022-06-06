@@ -4,7 +4,7 @@ import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.ChangeToCartReq;
 import com.example.chuyendeweb.model.response.ChangeToCartResponse;
 import com.example.chuyendeweb.model.response.ResponseObject;
-import com.example.chuyendeweb.repository.security.CustomUserDetails;
+import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

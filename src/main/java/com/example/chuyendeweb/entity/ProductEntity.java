@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -29,6 +30,10 @@ public class ProductEntity extends BaseEntity {
     private String name;
     @Column
     private String descriptions;
+    @Column
+    private Date importDate;
+    @Column
+    private Date expiryDate;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "categoryId")

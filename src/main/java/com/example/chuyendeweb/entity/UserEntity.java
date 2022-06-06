@@ -42,6 +42,8 @@ public class UserEntity extends BaseEntity {
     @Column
     private String phone;
     @Column
+    private String gender;
+    @Column
     private boolean enabled;
     @Column
     private String verificationCode;

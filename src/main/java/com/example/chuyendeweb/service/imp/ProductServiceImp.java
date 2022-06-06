@@ -46,7 +46,7 @@ public class ProductServiceImp implements IProductService {
             pageTuts = this.productRepository.findByNameContainingIgnoreCase(searchValue, pageable);
         }
         List<ProductEntity> productEntityList = pageTuts.getContent();
-        List<ProductResponse> ProductResponse = this.covertProductDetailToEntity(productEntityList);
+        List<ProductResponse> ProductResponse = this.covertProductEntityToResponse(productEntityList);
         Map<String,Object> result = new HashMap<>();
         result.put("products",ProductResponse);
         result.put("curerentPage",pageTuts.getNumber());
@@ -54,7 +54,7 @@ public class ProductServiceImp implements IProductService {
         result.put("totalPage",pageTuts.getTotalPages());
         return result ;
     }
-    public List<ProductResponse> covertProductDetailToEntity(List<ProductEntity> productDetailEntities){
+    public List<ProductResponse> covertProductEntityToResponse(List<ProductEntity> productDetailEntities){
                 List<ProductResponse> responseList = new ArrayList<>();
         for (ProductEntity productEntity :productDetailEntities) {
 

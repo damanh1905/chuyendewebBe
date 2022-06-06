@@ -1,7 +1,7 @@
 package com.example.chuyendeweb.util;
 
 
-import com.example.chuyendeweb.repository.security.CustomUserDetails;
+import com.example.chuyendeweb.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

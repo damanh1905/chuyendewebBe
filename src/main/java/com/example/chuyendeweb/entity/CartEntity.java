@@ -20,7 +20,7 @@ public class CartEntity extends BaseEntity {
     @JoinColumn(name = "userID", referencedColumnName = "id")
     private UserEntity userEntity;
     @JsonIgnore
-   @OneToMany(mappedBy = "cartEntity")
+     @OneToMany(mappedBy = "cartEntity")
     private Set<CartItemEntity> cartItemEntity;
 
     public CartEntity(Date lastModified, UserEntity userEntity) {

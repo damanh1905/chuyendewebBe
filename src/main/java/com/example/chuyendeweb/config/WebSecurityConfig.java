@@ -1,8 +1,8 @@
 package com.example.chuyendeweb.config;
 
 import com.example.chuyendeweb.filter.JwtRequestFilter;
-import com.example.chuyendeweb.repository.security.JwtAuthenticationEntryPoint;
-import com.example.chuyendeweb.repository.security.JwtUserDetailsService;
+import com.example.chuyendeweb.security.JwtAuthenticationEntryPoint;
+import com.example.chuyendeweb.security.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
-                .antMatchers("/api/cart/**","/api/product/**").permitAll()
+                .antMatchers("/api/cart/**").permitAll()
 //                .antMatchers("/api/mod/**").hasRole("MODERATOR")
 //                .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated().and()

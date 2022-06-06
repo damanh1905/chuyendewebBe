@@ -14,7 +14,7 @@ import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.RefreshTokenRepository;
 import com.example.chuyendeweb.repository.RoleRepository;
 import com.example.chuyendeweb.repository.UserRepository;
-import com.example.chuyendeweb.repository.security.RefreshTokenService;
+import com.example.chuyendeweb.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
 import com.example.chuyendeweb.util.SendEmailUtils;
 import net.bytebuddy.utility.RandomString;
@@ -228,6 +228,16 @@ public void setVerifyCodeEmail(UserEntity user){
     @Override
     public UserEntity findById(Long id) {
         return userRepository.findById(id).get();
+    }
+
+    @Override
+    public boolean finByUserName(String username) {
+        return userRepository.existsByUserName(username);
+    }
+
+    @Override
+    public boolean finByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
 

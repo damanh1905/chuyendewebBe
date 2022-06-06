@@ -10,7 +10,7 @@ import com.example.chuyendeweb.model.response.ChangeToCartResponse;
 import com.example.chuyendeweb.repository.CartItemRepository;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.ProductRepository;
-import com.example.chuyendeweb.repository.security.CustomUserDetails;
+import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IShoppingCartService;
 import com.example.chuyendeweb.service.IUserService;
 import org.modelmapper.ModelMapper;
