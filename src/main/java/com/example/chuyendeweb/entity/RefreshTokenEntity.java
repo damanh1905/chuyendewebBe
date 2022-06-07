@@ -18,7 +18,7 @@ public class RefreshTokenEntity extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userID", referencedColumnName = "id")
     private UserEntity userEntity;
-    @Column(unique = true)
+    @Column()
     private String token;
     @Column
     private Instant expiryDate;

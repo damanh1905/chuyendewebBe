@@ -20,7 +20,7 @@ public class SendEmailUtils {
     private JavaMailSender javaMailSender;
 
 
-    public void sendEmailWithAttachment(UserEntity user, String verify) throws MessagingException, IOException {
+    public void sendEmailWithAttachment(UserEntity user, int verify) throws MessagingException, IOException {
 
         MimeMessage msg = javaMailSender.createMimeMessage();
 
@@ -41,8 +41,8 @@ public class SendEmailUtils {
         helper.setTo("cubom234@gmail.com");
 
         helper.setSubject(subject);
-        String verifyURL = verify;
-        content = content.replace("[[code]]", verifyURL);
+        int verifyURL = verify;
+        content = content.replace("[[code]]", String.valueOf(verifyURL));
 
         // default = text/plain
         //helper.setText("Check attachment for image!");

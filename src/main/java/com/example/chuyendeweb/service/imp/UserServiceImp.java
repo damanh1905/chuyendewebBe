@@ -5,9 +5,9 @@ import com.example.chuyendeweb.entity.CartEntity;
 import com.example.chuyendeweb.entity.RefreshTokenEntity;
 import com.example.chuyendeweb.entity.RoleEntity;
 import com.example.chuyendeweb.entity.UserEntity;
-import com.example.chuyendeweb.exception.BadRequestException;
 import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.LogOutRequest;
+import com.example.chuyendeweb.model.request.RegisterEmail;
 import com.example.chuyendeweb.model.request.RegisterReq;
 import com.example.chuyendeweb.model.request.ResetPasswordRequest;
 import com.example.chuyendeweb.repository.CartRepository;
@@ -17,7 +17,6 @@ import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
 import com.example.chuyendeweb.util.SendEmailUtils;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,32 +50,50 @@ public class UserServiceImp implements IUserService {
 
     @Override
     public String registerUser(RegisterReq RegisterReq) throws IOException, MessagingException {
-        if (userRepository.existsByUserName(RegisterReq.getUsername())) {
-            throw new BadRequestException("Error: Username is already taken!");
-        }
-        if (userRepository.existsByEmail(RegisterReq.getEmail())) {
-            throw new BadRequestException("Error: Email is already in use!");
-        }
+//        if (userRepository.existsByUserName(RegisterReq.getUsername())) {
+//            throw new BadRequestException("Error: Username is already taken!");
+//        }
+//        if (userRepository.existsByEmail(RegisterReq.getEmail())) {
+//            throw new BadRequestException("Error: Email is already in use!");
+//        }
         // Create new user's account
-        UserEntity user = new UserEntity(RegisterReq.getUsername(),
-                RegisterReq.getEmail(),
-                encoder.encode(RegisterReq.getPassword()));
+        UserEntity user = this.userRepository.findByUserName(RegisterReq.getUserName()).get();
+        user.setPasswords( encoder.encode(RegisterReq.getPassword()));
+        user.setPhone(RegisterReq.getPhone());
+        user.setGender(RegisterReq.getGender());
 
-        Set<String> strRoles = RegisterReq.getRole();
+
+        Set<String> strRoles = null;
         Set<RoleEntity> roles = new HashSet<>();
         addRolesToUser(strRoles, roles);
         user.setRoles(roles);
-        user.setEnabled(true);
-        setVerifyCodeEmail(user);
-        user.setPhone("123");
         userRepository.save(user);
+        System.out.println(user.getId());
         refreshTokenService.createRefreshToken(user.getId());
-        System.out.println(user);
+
      CartEntity cart = new CartEntity(new Date(),user);
        cartRespository.save(cart);
-//        sendEmailUtils.sendEmailWithAttachment(user,user.getVerificationCode());
-        return "registered successfully, please check your email for verification instructions";
+
+        return "registered successfully";
     }
+
+    @Override
+    public String registerEmail(RegisterEmail registerEmail) throws MessagingException, IOException {
+        UserEntity user = new UserEntity(registerEmail.getName(), registerEmail.getEmail());
+        user.setEnabled(false);
+        setVerifyCodeEmail(user);
+        //case time ơ day
+//        boolean check = this.userRepository.existsByUserName(registerEmail.getName());
+//        if (check) {
+//            sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
+//            System.out.println(user);
+//            return "please check your email for verification instructions";
+//        }
+        userRepository.save(user);
+        sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
+        return "registered email successfully, please check your email for verification instructions";
+    }
+
     @Override
     public boolean refeshVerifyCode(String email) {
         UserEntity user = userRepository.findByEmail(email);
@@ -86,7 +103,7 @@ public class UserServiceImp implements IUserService {
             } else {
                 if (!checkTimeVerifyCode(user)) {
                     setVerifyCodeEmail(user);
-                    sendEmailUtils.sendEmailWithAttachment(user,user.getVerificationCode());
+                    sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
                     userRepository.save(user);
                     return true;
                 } else {
@@ -102,21 +119,24 @@ public class UserServiceImp implements IUserService {
         }
         return false;
     }
+
     @Override
-    public boolean verify(String verificationCode) {
+    public boolean verify(int verificationCode) {
         UserEntity user = userRepository.findByVerificationCode(verificationCode);
 
         try {
             if (user == null || user.isEnabled()) {
-                throw new NotFoundException("verificationCode is incorrect or user is disabled");
+//                throw new NotFoundException("verificationCode is incorrect or user is disabled");
+                return false;
             } else {
                 if (checkTimeVerifyCode(user)) {
-                    user.setVerificationCode(null);
+                    user.setVerificationCode(0);
                     user.setEnabled(true);
                     userRepository.save(user);
                     return true;
                 } else {
-                  throw  new NotFoundException("verificationCode token was expired. Please make a new refeshVerifyCode");
+//                  throw  new NotFoundException("verificationCode token was expired. Please make a new refeshVerifyCode");
+                    return false;
                 }
 
             }
@@ -126,6 +146,7 @@ public class UserServiceImp implements IUserService {
         }
         return false;
     }
+
     @Override
     public boolean checkForgot(String email) {
         UserEntity user = userRepository.findByEmail(email);
@@ -133,11 +154,11 @@ public class UserServiceImp implements IUserService {
             if (user == null || user.isEnabled()) {
                 throw new NotFoundException("email is incorrect or user is disabled");
             } else {
-                String randomCode = RandomString.make(64);
-                user.setVerifiForgot(randomCode);
-                sendEmailUtils.sendEmailWithAttachment(user,user.getVerifiForgot());
+                int code = (int) Math.floor(((Math.random() * 899999) + 100000));
+                user.setVerifiForgot(code);
+                sendEmailUtils.sendEmailWithAttachment(user, user.getVerifiForgot());
                 userRepository.save(user);
-                return  true;
+                return true;
             }
         } catch (NullPointerException | IOException | MessagingException ex) {
 
@@ -153,21 +174,22 @@ public class UserServiceImp implements IUserService {
         try {
             if (user == null || user.isEnabled()) {
                 throw new NotFoundException("email is incorrect or user is disabled");
-            }else{
-                if(!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())){
-                    throw  new NotFoundException("password not the same");
-                }else{
+            } else {
+                if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmPassword())) {
+                    throw new NotFoundException("password not the same");
+                } else {
                     user.setPasswords(encoder.encode(resetPasswordRequest.getNewPassword()));
-                    user.setVerifiForgot(null);
+                    user.setVerifiForgot(0);
                     userRepository.save(user);
                     return true;
                 }
             }
-        }catch (NullPointerException ex){
+        } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
-        return  false;
+        return false;
     }
+
     public boolean checkTimeVerifyCode(UserEntity user) {
         return user.getDateCreated().getTime() + timeVerifyCode - new Date().getTime() >= 0;
     }
@@ -198,33 +220,37 @@ public class UserServiceImp implements IUserService {
             });
         }
     }
+
     @Override
     public boolean checklogout(LogOutRequest logOutRequest) {
         UserEntity user = userRepository.findByUserID(logOutRequest.getUserId());
-       try {
-           if(user == null){
-               throw  new NotFoundException("id is incorrect");
-           }else{
-               user.setVerificationCode(null);
-               user.setVerifiForgot(null);
-               RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(user.getId());
-               refreshToken.setExpiryDate(null);
-               refreshToken.setToken(null);
-               refreshTokenRepository.saveAndFlush(refreshToken);
-               userRepository.save(user);
-               return  true;
-           }
-       }catch (NullPointerException ex){
-           ex.printStackTrace();
-       }
+        try {
+            if (user == null) {
+                throw new NotFoundException("id is incorrect");
+            } else {
+                user.setVerificationCode(0);
+                user.setVerifiForgot(0);
+                RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(user.getId());
+                refreshToken.setExpiryDate(null);
+                refreshToken.setToken(null);
+                refreshTokenRepository.saveAndFlush(refreshToken);
+                userRepository.save(user);
+                return true;
+            }
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
 
         return false;
     }
-public void setVerifyCodeEmail(UserEntity user){
-    String randomCode = RandomString.make(64);
-    user.setVerificationCode(randomCode);
-    user.setDateCreated(new Date());
-}
+
+
+    public void setVerifyCodeEmail(UserEntity user) {
+        int code = (int) Math.floor(((Math.random() * 899999) + 100000));
+        user.setVerificationCode(code);
+        user.setDateCreated(new Date());
+    }
+
     @Override
     public UserEntity findById(Long id) {
         return userRepository.findById(id).get();

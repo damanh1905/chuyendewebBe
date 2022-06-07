@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerifyCodeReq {
-    @NotBlank
-    private String verifyCodeEmail;
+
+    private int verifyCodeEmail;
 
 }

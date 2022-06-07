@@ -17,10 +17,9 @@ import java.util.Set;
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "userName"),
-                @UniqueConstraint(columnNames = "email")
         })
 public class UserEntity extends BaseEntity {
-    @NotBlank
+
     @Size(max = 20)
 //    @Length(min = 5,max = 20, message = "*Your password must have at least 5 characters")
     @Column
@@ -30,7 +29,6 @@ public class UserEntity extends BaseEntity {
     @Size(max = 50)
     private String email;
     @Column
-    @NotBlank
     @Size(max = 120)
     private String passwords;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,9 +44,9 @@ public class UserEntity extends BaseEntity {
     @Column
     private boolean enabled;
     @Column
-    private String verificationCode;
+    private int verificationCode;
     @Column
-    private String verifiForgot;
+    private int verifiForgot;
     @Column
     private String statuss;
     @OneToOne(mappedBy = "userEntity")
@@ -60,6 +58,12 @@ public class UserEntity extends BaseEntity {
         this.userName = username;
         this.email = email;
         this.passwords = password;
+    }
+
+    public UserEntity(String username,String email) {
+        this.userName = username;
+        this.email = email;
+
     }
 
 }

@@ -12,8 +12,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResetPasswordRequest {
-    @NotBlank
-    private String verifyCodeForgot;
+
+    private int verifyCodeForgot;
     @NotBlank
     @Min(value = 8, message = "Password phải từ 8 kí tự trở lên")
     private String newPassword;

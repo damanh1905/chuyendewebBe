@@ -82,6 +82,11 @@ public class AuthController {
         String result = iUserService.registerUser(RegisterReq);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, result, ""));
     }
+    @PostMapping(value = "/registerEmail")
+    public ResponseEntity<?> registerEmail(@Valid @RequestBody RegisterEmail registerEmail) throws MessagingException, IOException {
+            String result = this.iUserService.registerEmail(registerEmail);
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),result,""));
+    }
 
     @PostMapping(value = "/verifyEmail")
     public ResponseEntity<?> VerifyEmail( @Valid @RequestBody VerifyCodeReq verifyCode) {
@@ -89,7 +94,7 @@ public class AuthController {
         if (isCheckVerify)
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject(HttpStatus.OK.value(), "Verification successful, you can now login", ""));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Verification failed,you need to check the verifyCode in the Email or verifyCode expire", ""));
     }
 
@@ -156,18 +161,18 @@ public class AuthController {
 
 
     }
-    @GetMapping("/checkEmail")
-    public ResponseEntity<?> checkEmail(@RequestParam String email){
-        boolean check =this.iUserService.finByEmail(email);
-        if(check)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit email!", ""));
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
-
-
-    }
+//    @GetMapping("/checkEmail")
+//    public ResponseEntity<?> checkEmail(@RequestParam String email){
+//        boolean check =this.iUserService.finByEmail(email);
+//        if(check)
+//            return ResponseEntity.status(HttpStatus.OK)
+//                    .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit email!", ""));
+//
+//        return ResponseEntity.status(HttpStatus.OK)
+//                .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
+//
+//
+//    }
 
 }
 

@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findById(Long id);
-    Optional<UserEntity> findByUserName(String userName);
 
+    Optional<UserEntity> findByUserName(String userName);
 
     boolean existsByUserName(String userName);
 
@@ -20,13 +20,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUserID(Long id);
 
     @Query("SELECT u FROM UserEntity u where  u.verificationCode = ?1")
-    UserEntity findByVerificationCode(String verificationCode);
+    UserEntity findByVerificationCode(int verificationCode);
 
     @Query("SELECT u FROM UserEntity u where  u.email = ?1")
     UserEntity findByEmail(String email);
 
     @Query("SELECT u FROM UserEntity u where  u.verifiForgot = ?1")
-    UserEntity findByVerifiForgot(String verifiForgot);
+    UserEntity findByVerifiForgot(int verifiForgot);
 
 
 
