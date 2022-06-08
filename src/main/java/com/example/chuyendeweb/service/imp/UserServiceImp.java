@@ -6,7 +6,6 @@ import com.example.chuyendeweb.entity.RefreshTokenEntity;
 import com.example.chuyendeweb.entity.RoleEntity;
 import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.exception.NotFoundException;
-import com.example.chuyendeweb.model.request.LogOutRequest;
 import com.example.chuyendeweb.model.request.RegisterEmail;
 import com.example.chuyendeweb.model.request.RegisterReq;
 import com.example.chuyendeweb.model.request.ResetPasswordRequest;
@@ -222,8 +221,8 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
-    public boolean checklogout(LogOutRequest logOutRequest) {
-        UserEntity user = userRepository.findByUserID(logOutRequest.getUserId());
+    public boolean checklogout(String  userName) {
+        UserEntity user = userRepository.findByUserName(userName).get();
         try {
             if (user == null) {
                 throw new NotFoundException("id is incorrect");

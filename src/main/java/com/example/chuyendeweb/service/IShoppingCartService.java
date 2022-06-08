@@ -14,6 +14,6 @@ public interface IShoppingCartService {
 
     Set<ChangeToCartResponse> mergeToCart(CustomUserDetails userDetails, List<ChangeToCartReq> changeToCartReqList);
 
-    Set<ChangeToCartResponse> showCart(CustomUserDetails userDetails);
+    List<ChangeToCartResponse> showCart(CustomUserDetails userDetails);
 
 }

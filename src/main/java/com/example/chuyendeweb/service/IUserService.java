@@ -23,7 +23,7 @@ public interface IUserService {
 
     boolean ResetPassword(ResetPasswordRequest resetPasswordRequest);
 
-    boolean checklogout(LogOutRequest logOutRequest);
+    boolean checklogout(String userName);
 
     String registerEmail(RegisterEmail registerEmail) throws MessagingException, IOException;
 }

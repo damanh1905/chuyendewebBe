@@ -35,7 +35,7 @@ import java.util.Map;
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "product detail ", result));
 
     }
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     @GetMapping("/ShowAndsearch")
     public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = false) String searchValue,
            @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "10") int pageSize){

@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class ProductEntity extends BaseEntity {
     private CategoryEntity categoryEntity;
     @JsonIgnore
     @OneToMany(mappedBy = "productEntities")
-    private Set<CartItemEntity> cartItemEntity;
+    private List<CartItemEntity> cartItemEntity;
 
 
 }

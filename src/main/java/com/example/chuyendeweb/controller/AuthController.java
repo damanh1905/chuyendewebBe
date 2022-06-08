@@ -142,9 +142,9 @@ public class AuthController {
                         "Refresh token is not in database!"));
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogOutRequest logOutRequest) {
-        boolean isCheckLogOut = iUserService.checklogout(logOutRequest);
+    @GetMapping("/logout")
+    public ResponseEntity<?> logoutUser(@RequestParam(value = "userName") String userName ) {
+        boolean isCheckLogOut = iUserService.checklogout(userName);
         if(isCheckLogOut){
             return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Log out successful!", ""));
         }
@@ -161,18 +161,7 @@ public class AuthController {
 
 
     }
-//    @GetMapping("/checkEmail")
-//    public ResponseEntity<?> checkEmail(@RequestParam String email){
-//        boolean check =this.iUserService.finByEmail(email);
-//        if(check)
-//            return ResponseEntity.status(HttpStatus.OK)
-//                    .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit email!", ""));
-//
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
-//
-//
-//    }
+
 
 }
 

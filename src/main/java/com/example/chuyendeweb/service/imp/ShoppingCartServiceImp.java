@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ShoppingCartServiceImp implements IShoppingCartService {
@@ -63,22 +60,13 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
                     }
                     this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
                     break;
-                case "plus":
+                case "change":
                         updatingCartItemEntity.setQuantity(changeToCartReq.getQuantity());
                         updatingCartItemEntity.setTotalPrice(totalCartItem);
-                    this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
-                    break;
-                case "minus":
-                    if(changeToCartReq.getQuantity() >0) {
-                        updatingCartItemEntity.setQuantity(changeToCartReq.getQuantity());
-                        updatingCartItemEntity.setTotalPrice(totalCartItem);
-                    }else{
-                        throw  new NotFoundException("quantity must be greater than 0");
-                    }
                     this.cartItemRespository.saveAndFlush(updatingCartItemEntity);
                     break;
                 case "remove":
-                    this.cartItemRespository.delete(updatingCartItemEntity);
+                    this.cartItemRespository.deleteById(updatingCartItemEntity.getId());
                     break;
             }
         }
@@ -111,7 +99,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
             this.cartItemRespository.save(foundCartItemEntity);
         }
         Set<ChangeToCartResponse> result = new HashSet<>();
-        Set<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
+        List<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
         for (CartItemEntity cartItemEntity:cartItemEntities) {
             result.add(this.mapper.map(cartItemEntity,ChangeToCartResponse.class));
 
@@ -120,15 +108,16 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
     }
 
     @Override
-    public Set<ChangeToCartResponse> showCart(CustomUserDetails userDetails) {
+    public List<ChangeToCartResponse> showCart(CustomUserDetails userDetails) {
         UserEntity userEntity = iUserService.findById(userDetails.getId());
         CartEntity cartEntity = cartRespository.findByUserEntity(userEntity);
         if(cartEntity == null){
             cartEntity = new CartEntity(new Date(),userEntity);
             cartRespository.save(cartEntity);
         }
-        Set<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
-        Set<ChangeToCartResponse> result = new HashSet<>();
+
+        List<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
+        List<ChangeToCartResponse> result = new ArrayList<>();
         for (CartItemEntity cartItemEntity:cartItemEntities) {
             ChangeToCartResponse toCartResponse = this.mapper.map(cartItemEntity,ChangeToCartResponse.class);
             result.add(toCartResponse);

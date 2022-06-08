@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 @ToString
 @Entity
@@ -21,7 +22,7 @@ public class CartEntity extends BaseEntity {
     private UserEntity userEntity;
     @JsonIgnore
      @OneToMany(mappedBy = "cartEntity")
-    private Set<CartItemEntity> cartItemEntity;
+    private List<CartItemEntity> cartItemEntity;
 
     public CartEntity(Date lastModified, UserEntity userEntity) {
         super();
