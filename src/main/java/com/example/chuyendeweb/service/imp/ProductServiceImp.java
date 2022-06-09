@@ -40,7 +40,7 @@ public class ProductServiceImp implements IProductService {
     public Map<String ,Object> showAndSearchProduct(String searchValue, Pageable pageable) {
 
         Page<ProductEntity> pageTuts;
-        if(searchValue == null) {
+        if(searchValue.equals("all")) {
             pageTuts = this.productRepository.findAll(pageable);
         }else {
             pageTuts = this.productRepository.findByNameContainingIgnoreCase(searchValue, pageable);

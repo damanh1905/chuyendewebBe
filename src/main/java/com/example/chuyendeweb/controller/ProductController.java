@@ -37,7 +37,7 @@ import java.util.Map;
     }
 //    @PreAuthorize("hasRole('USER')")
     @GetMapping("/ShowAndsearch")
-    public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = false) String searchValue,
+    public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = true) String searchValue,
            @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "10") int pageSize){
 
             Pageable pageable = PageRequest.of(pageIndex,pageSize);
