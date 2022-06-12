@@ -82,14 +82,16 @@ public class UserServiceImp implements IUserService {
         user.setEnabled(false);
         setVerifyCodeEmail(user);
         //case time ơ day
-//        boolean check = this.userRepository.existsByUserName(registerEmail.getName());
-//        if (check) {
-//            sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
-//            System.out.println(user);
-//            return "please check your email for verification instructions";
-//        }
-        userRepository.save(user);
+        boolean check = this.userRepository.existsByUserName(registerEmail.getName());
+        if (check) {
+            user = this.userRepository.findByUserName(registerEmail.getName()).get();
+            sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
+            System.out.println(user);
+            return "please check your email for verification instructions";
+        }
         sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
+        userRepository.save(user);
+
         return "registered email successfully, please check your email for verification instructions";
     }
 

@@ -1,7 +1,10 @@
 package com.example.chuyendeweb.model.response;
 
 
+import com.example.chuyendeweb.entity.ImageEntity;
 import lombok.*;
+
+import java.util.List;
 
 @ToString
 @Getter
@@ -18,5 +21,6 @@ public class ProductResponse {
     private String name;
     private String descriptions;
     private CategoryResponse categoryResponse;
+    private List<ImageEntity> ImageEntity;
 
 }

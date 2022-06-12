@@ -42,6 +42,10 @@ public class ProductEntity extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "productEntities")
     private List<CartItemEntity> cartItemEntity;
+    @JsonIgnore
+    @OneToMany(mappedBy = "productEntity",cascade = CascadeType.ALL)
+    private List<ImageEntity> ImageEntity;
+
 
 
 }

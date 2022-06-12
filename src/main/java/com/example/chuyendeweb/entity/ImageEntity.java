@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +17,7 @@ import javax.persistence.Table;
 public class ImageEntity extends BaseEntity {
     @Column
     private String url;
+    @ManyToOne
+    @JoinColumn(name = "productId",referencedColumnName = "id")
+    ProductEntity productEntity;
 }

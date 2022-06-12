@@ -20,16 +20,16 @@ import java.util.Set;
         })
 public class UserEntity extends BaseEntity {
 
-    @Size(max = 20)
+//    @Size(max = 20)
 //    @Length(min = 5,max = 20, message = "*Your password must have at least 5 characters")
     @Column
     private String userName;
     @Column
     @NotBlank
-    @Size(max = 50)
+//    @Size(max = 50)
     private String email;
     @Column
-    @Size(max = 120)
+//    @Size(max = 120)
     private String passwords;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "userRoles",

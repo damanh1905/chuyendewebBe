@@ -28,7 +28,7 @@ public class SendEmailUtils {
         MimeMessageHelper helper = new MimeMessageHelper(msg, true);
         String toAddress = user.getEmail();
         String fromAddress = "damvannanh@gmail.com";
-        String senderName = "Hoàng Văn hiệp";
+        String senderName = "Ogina company";
         String subject = "Please verify your registration";
 
         String content = "<p> Dear " + user.getUserName() + ",</p>" + "<br>"

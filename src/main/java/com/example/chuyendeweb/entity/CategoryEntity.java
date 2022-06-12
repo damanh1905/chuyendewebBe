@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,6 +21,6 @@ public class CategoryEntity extends BaseEntity {
     @Column
     private String NameCategory;
     @OneToMany(mappedBy = "categoryEntity")
-    private Set<ProductEntity> productEntitys ;
+    private List<ProductEntity> productEntitys ;
 
 }
