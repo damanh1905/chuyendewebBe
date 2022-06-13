@@ -1,16 +1,13 @@
 package com.example.chuyendeweb.controller;
 
-import com.example.chuyendeweb.entity.RefreshTokenEntity;
-import com.example.chuyendeweb.entity.UserEntity;
-import com.example.chuyendeweb.exception.TokenRefreshException;
-import com.example.chuyendeweb.model.request.*;
-import com.example.chuyendeweb.model.response.JwtResponse;
-import com.example.chuyendeweb.model.response.ResponseObject;
-import com.example.chuyendeweb.model.response.TokenRefreshResponse;
-import com.example.chuyendeweb.security.CustomUserDetails;
-import com.example.chuyendeweb.security.RefreshTokenService;
-import com.example.chuyendeweb.service.IUserService;
-import com.example.chuyendeweb.util.JwtUtils;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +15,29 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.example.chuyendeweb.entity.RefreshTokenEntity;
+import com.example.chuyendeweb.exception.TokenRefreshException;
+import com.example.chuyendeweb.model.request.EmailReq;
+import com.example.chuyendeweb.model.request.LoginReq;
+import com.example.chuyendeweb.model.request.RegisterEmail;
+import com.example.chuyendeweb.model.request.RegisterReq;
+import com.example.chuyendeweb.model.request.ResetPasswordRequest;
+import com.example.chuyendeweb.model.request.TokenRefreshReq;
+import com.example.chuyendeweb.model.request.VerifyCodeReq;
+import com.example.chuyendeweb.model.response.JwtResponse;
+import com.example.chuyendeweb.model.response.ResponseObject;
+import com.example.chuyendeweb.model.response.TokenRefreshResponse;
+import com.example.chuyendeweb.security.CustomUserDetails;
+import com.example.chuyendeweb.security.RefreshTokenService;
+import com.example.chuyendeweb.service.IUserService;
+import com.example.chuyendeweb.util.JwtUtils;
 
 
 @RestController
