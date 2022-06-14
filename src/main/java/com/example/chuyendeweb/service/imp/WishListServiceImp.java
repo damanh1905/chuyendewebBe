@@ -10,7 +10,12 @@ import com.example.chuyendeweb.repository.WishListItemRepository;
 import com.example.chuyendeweb.repository.WishListRepository;
 import com.example.chuyendeweb.service.IWishListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+
+import java.util.List;
 
 @Service
 public class WishListServiceImp implements IWishListService {
@@ -42,5 +47,21 @@ public class WishListServiceImp implements IWishListService {
             this.wishListItemRepository.save(wishListItemEntity);
         }
         return productEntity;
+    }
+
+    @Override
+    public List<WishListItemEntity> findAll(Specification<WishListItemEntity> spec, Pageable pageable) {
+        return this.wishListItemRepository.findAll(spec,pageable).getContent();
+    }
+
+    @Override
+    public WishListEntity findByUserEntity(UserEntity userEntity) {
+        return this.wishListRepository.findByUserEntity(userEntity);
+    }
+
+    @Override
+    public void delete(ProductEntity productEntity) {
+        this.wishListItemRepository.deleteByProductEntities(productEntity);
+
     }
 }

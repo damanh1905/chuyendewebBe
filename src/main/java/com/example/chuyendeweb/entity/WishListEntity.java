@@ -20,6 +20,7 @@ public class WishListEntity extends BaseEntity{
     @JsonIgnore
     @OneToMany(mappedBy = "wishList")
     private List<WishListItemEntity> wishListItems;
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userID", referencedColumnName = "id")
     private UserEntity userEntity;
