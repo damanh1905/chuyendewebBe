@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Getter
@@ -45,7 +43,8 @@ public class ProductEntity extends BaseEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "productEntity",cascade = CascadeType.ALL)
     private List<ImageEntity> ImageEntity;
-
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "productEntities")
+    private List<WishListItemEntity> wishListItems;
 
 }

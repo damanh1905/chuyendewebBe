@@ -38,7 +38,7 @@ public class SendEmailUtils {
                 + "Thank you,<br>"
                 + "Your company hoanghiep.";
         helper.setFrom(fromAddress, senderName);
-        helper.setTo("cubom234@gmail.com");
+        helper.setTo(user.getEmail());
 
         helper.setSubject(subject);
         int verifyURL = verify;

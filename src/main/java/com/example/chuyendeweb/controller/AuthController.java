@@ -18,10 +18,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -37,6 +38,8 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
+    PasswordEncoder encoder;
+    @Autowired
     JwtUtils jwtUtils;
 
     @Autowired
@@ -47,13 +50,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginReq LoginReq, HttpServletResponse response) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(LoginReq.getUsername(), LoginReq.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
+        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(LoginReq.getUsername(), LoginReq.getPassword());
         String jwt = jwtUtils.generateJwtToken(userDetails);
 
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
@@ -73,7 +71,7 @@ public class AuthController {
 //        response.addCookie(cookie);
 //        response.addCookie(refresh);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.value(),jwt, refreshToken.getToken(), userDetails.getId(),
+        return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
                 userDetails.getUsername(), userDetails.getEmail(), roles));
     }
 
@@ -82,14 +80,15 @@ public class AuthController {
         String result = iUserService.registerUser(RegisterReq);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, result, ""));
     }
+
     @PostMapping(value = "/registerEmail")
     public ResponseEntity<?> registerEmail(@Valid @RequestBody RegisterEmail registerEmail) throws MessagingException, IOException {
-            String result = this.iUserService.registerEmail(registerEmail);
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(),result,""));
+        String result = this.iUserService.registerEmail(registerEmail);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), result, ""));
     }
 
     @PostMapping(value = "/verifyEmail")
-    public ResponseEntity<?> VerifyEmail( @Valid @RequestBody VerifyCodeReq verifyCode) {
+    public ResponseEntity<?> VerifyEmail(@Valid @RequestBody VerifyCodeReq verifyCode) {
         boolean isCheckVerify = iUserService.verify(verifyCode.getVerifyCodeEmail());
         if (isCheckVerify)
             return ResponseEntity.status(HttpStatus.OK)
@@ -107,8 +106,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "This email does not exist in the database", ""));
     }
+
     @PostMapping(value = "/forgot-password")
-    public ResponseEntity<?> forgotPassword( @Valid @RequestBody EmailReq forgotReq) {
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody EmailReq forgotReq) {
         boolean isCheckforgot = iUserService.checkForgot(forgotReq.getEmail());
         if (isCheckforgot)
             return ResponseEntity.status(HttpStatus.OK)
@@ -116,14 +116,15 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Verification failed,the email you entered is wrong", ""));
     }
+
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest){
-        boolean resetPassword= iUserService.ResetPassword(resetPasswordRequest);
-        if(resetPassword)
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        boolean resetPassword = iUserService.ResetPassword(resetPasswordRequest);
+        if (resetPassword)
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.OK.value(),"reset Password successful",""));
+                    .body(new ResponseObject(HttpStatus.OK.value(), "reset Password successful", ""));
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),"reset Password fail",""));
+                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "reset Password fail", ""));
 
     }
 
@@ -143,25 +144,58 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logoutUser(@RequestParam(value = "userName") String userName ) {
+    public ResponseEntity<?> logoutUser(@RequestParam(value = "userName") String userName) {
         boolean isCheckLogOut = iUserService.checklogout(userName);
-        if(isCheckLogOut){
+        if (isCheckLogOut) {
             return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Log out successful!", ""));
         }
         return ResponseEntity.ok(new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Log out fail!", ""));
-    }    @GetMapping("/checkUserName")
-    public ResponseEntity<?> checkUser(@RequestParam String username){
-        boolean check =this.iUserService.finByUserName(username);
-        if(check)
+    }
+
+    @GetMapping("/checkUserName")
+    public ResponseEntity<?> checkUser(@RequestParam String username) {
+        boolean check = this.iUserService.finByUserName(username);
+        if (check)
             return ResponseEntity.status(HttpStatus.OK)
                     .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit user!", ""));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
+    }
+
+    @GetMapping("/checkLoginGG")
+    public ResponseEntity<?> checkLoginGG(@RequestParam String username, @RequestParam String email) {
+        boolean check = this.iUserService.finByUserName(username);
+        if (check) {
+            UserEntity user = this.iUserService.finByName(username);
+            CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(), "12345678");
+            String jwt = jwtUtils.generateJwtToken(userDetails);
+            List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+            RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+            return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
+                    userDetails.getUsername(), userDetails.getEmail(), roles));
+        }
+        UserEntity user = this.iUserService.setUserToGG(username, email);
+        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(), "12345678");
+        String jwt = jwtUtils.generateJwtToken(userDetails);
+        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+        RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
+                userDetails.getUsername(), userDetails.getEmail(), roles));
 
 
     }
 
+    public UserDetails authuticate(String username, String password) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        return userDetails;
+    }
 
 }
 

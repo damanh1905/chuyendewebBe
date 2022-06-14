@@ -96,6 +96,11 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
+    public UserEntity saveAndFlush(UserEntity user) {
+        return this.userRepository.save(user);
+    }
+
+    @Override
     public boolean refeshVerifyCode(String email) {
         UserEntity user = userRepository.findByEmail(email);
         try {
@@ -194,7 +199,19 @@ public class UserServiceImp implements IUserService {
     public boolean checkTimeVerifyCode(UserEntity user) {
         return user.getDateCreated().getTime() + timeVerifyCode - new Date().getTime() >= 0;
     }
-
+    public UserEntity setUserToGG(String username,String email ){
+        UserEntity user = new UserEntity(username, email);
+        user.setEnabled(true);
+        user.setPasswords(encoder.encode("12345678"));
+        Set<String> strRoles = null;
+        Set<RoleEntity> roles = new HashSet<>();
+        addRolesToUser(strRoles, roles);
+        user.setRoles(roles);
+        userRepository.saveAndFlush(user);
+        System.out.println("aaaaaaaaaaaaaaaaaaaa");
+        refreshTokenService.createRefreshToken(user.getId());
+        return user;
+    }
     public void addRolesToUser(Set<String> strRoles, Set<RoleEntity> roles) {
         if (strRoles == null) {
             RoleEntity userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -255,6 +272,11 @@ public class UserServiceImp implements IUserService {
     @Override
     public UserEntity findById(Long id) {
         return userRepository.findById(id).get();
+    }
+
+    @Override
+    public UserEntity finByName(String username) {
+        return this.userRepository.findByUserName(username).get();
     }
 
     @Override
