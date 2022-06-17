@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +12,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@ToString
+
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "userName"),
@@ -53,6 +52,8 @@ public class UserEntity extends BaseEntity {
     private CartEntity cartEntity;
     @OneToOne(mappedBy = "userEntity")
     private RefreshTokenEntity refreshToken;
+    @OneToOne(mappedBy = "userEntity")
+    private WishListEntity wishList;
 
     public UserEntity(String username, String email, String password) {
         this.userName = username;

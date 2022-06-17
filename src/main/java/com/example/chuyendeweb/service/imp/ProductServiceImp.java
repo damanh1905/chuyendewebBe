@@ -37,6 +37,11 @@ public class ProductServiceImp implements IProductService {
     }
 
     @Override
+    public ProductEntity findByIdProduct(long id) {
+        return this.productRepository.findById(id).get();
+    }
+
+    @Override
     public Map<String ,Object> showAndSearchProduct(String searchValue, Pageable pageable) {
 
         Page<ProductEntity> pageTuts;

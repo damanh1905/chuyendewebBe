@@ -42,7 +42,16 @@ public class RefreshTokenService {
         refreshToken.setUserEntity(userRepository.findById(userId).get());
         refreshTokenRepository.save(refreshToken);
     }
+    public RefreshTokenEntity createRefreshToken2(Long userId) {
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity();
 
+        refreshToken.setUserEntity(userRepository.findById(userId).get());
+        refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
+        refreshToken.setToken(UUID.randomUUID().toString());
+
+        refreshToken = refreshTokenRepository.save(refreshToken);
+        return refreshToken;
+    }
     public RefreshTokenEntity verifyExpiration(RefreshTokenEntity token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(token);
