@@ -11,13 +11,11 @@ import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IProductService;
 import com.example.chuyendeweb.service.IUserService;
 import com.example.chuyendeweb.service.IWishListService;
-import org.apache.catalina.mapper.Mapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,21 +40,23 @@ public class WishListController {
     ModelMapper mapper;
     @Autowired
     IProductService iProductService;
-    @PostMapping("/addWishList")
-    public ResponseEntity<?> addWishList(@RequestParam (value =  "iDProduct" ) Long id ) {
+
+    @GetMapping("/addWishList")
+    public ResponseEntity<?> addWishList(@RequestParam(value = "iDProduct") Long id) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             throw new NotFoundException("please login to purchase!");
         }
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        ProductEntity toCartResponse = iWishListService.addProductWishList(userDetails.getId(),id);
+        ProductEntity toCartResponse = iWishListService.addProductWishList(userDetails.getId(), id);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(HttpStatus.OK.value(), "successful!", toCartResponse));
 
     }
+
     @GetMapping("/findAll")
-    public ResponseEntity<?> findAll(@RequestParam String action,@RequestParam(required = false ) Long favProductId,
-             @RequestParam(defaultValue ="0" ) int pageIndex,@RequestParam(defaultValue = "10") int pageSize){
+    public ResponseEntity<?> findAll(@RequestParam String action, @RequestParam(required = false) Long favProductId,
+                                     @RequestParam(defaultValue = "0") int pageIndex, @RequestParam(defaultValue = "10") int pageSize) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
             throw new NotFoundException("please login to purchase!");
         }
@@ -66,24 +66,24 @@ public class WishListController {
         Specification<WishListItemEntity> spec = new Specification<WishListItemEntity>() {
             @Override
             public Predicate toPredicate(Root<WishListItemEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get("wishList"),wishList);
+                return criteriaBuilder.equal(root.get("wishList"), wishList);
             }
         };
-        Pageable pageable =  PageRequest.of(pageIndex,pageSize);
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
         List<WishListItemEntity> wishListItemEntityList = null;
-        if(action.equals("show")){
-            wishListItemEntityList = this.iWishListService.findAll(spec,  pageable);
-        }else if(action.equals("remove")){
+        if (action.equals("show")) {
+            wishListItemEntityList = this.iWishListService.findAll(spec, pageable);
+        } else if (action.equals("remove")) {
             ProductEntity productEntity = this.iProductService.findByIdProduct(favProductId);
             this.iWishListService.delete(productEntity);
-            wishListItemEntityList = this.iWishListService.findAll(spec,  pageable);
+            wishListItemEntityList = this.iWishListService.findAll(spec, pageable);
         }
         List<WishListItemResponse> list = new ArrayList<>();
-        for (WishListItemEntity wishListItemEntity :wishListItemEntityList) {
-            list.add(this.mapper.map(wishListItemEntity,WishListItemResponse.class));
+        for (WishListItemEntity wishListItemEntity : wishListItemEntityList) {
+            list.add(this.mapper.map(wishListItemEntity, WishListItemResponse.class));
 
         }
-return ResponseEntity.ok(list);
+        return ResponseEntity.ok(list);
     }
 
 }
