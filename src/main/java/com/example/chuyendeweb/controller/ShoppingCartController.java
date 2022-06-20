@@ -3,6 +3,7 @@ package com.example.chuyendeweb.controller;
 import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.ChangeToCartReq;
 import com.example.chuyendeweb.model.response.ChangeToCartResponse;
+import com.example.chuyendeweb.model.response.ChangeToOrderResponse;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IShoppingCartService;
@@ -61,4 +62,16 @@ public class ShoppingCartController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(HttpStatus.OK.value(), "show list cart successful!", toCartResponseList));
     }
+    //listorderCArt
+	@GetMapping("/listOrder")
+	public ResponseEntity<?> showListOrder() {
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			throw new NotFoundException("please login to purchase!");
+		}
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		List<ChangeToOrderResponse> toOrderResponseList = iShoppingCartService.showOrder(userDetails);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ResponseObject(HttpStatus.OK.value(), "show List Order successful!", toOrderResponseList));
+	}
 }
