@@ -43,16 +43,18 @@ public class OrderImp implements IOrderService {
 		order.setShipFee(changeToOrderRequest.getFeeTotal());
 		UserEntity userEntity = this.iUserService.findById(userDetails.getId());
 		order.setUserEntity(userEntity);
+		repositoryOrder.save(order);
 		for (int i = 0; i < changeToOrderRequest.getIdProducts().length; i++) {
 			ProductEntity product = productRepo.findById((long) changeToOrderRequest.getIdProducts()[i]).get();
 			if (product != null) {
 				OrderDetailEntity orderDetail = new OrderDetailEntity();
 				orderDetail.setProductEntity(product);
-
+				orderDetail.setOrderEntity(order);
 //				xu li quantity & totalOrderDetailPrice
 				CartItemEntity cartItemEntity = handleQuantityAndTotalPriceProduct(userEntity, product);
 				orderDetail.setTotalOrderDetailPrice(cartItemEntity.getTotalPrice());
 				orderDetail.setQuantity(cartItemEntity.getQuantity());
+				
 
 				orderDetailRepo.save(orderDetail);
 
@@ -63,6 +65,7 @@ public class OrderImp implements IOrderService {
 		}
 //		xoa từng cartItem theo Id của cartId
 		repositoryOrder.save(order);
+		
 		CartEntity cart = cartRepo.findByUserEntity(userEntity);
 		System.out.println("iddddd" + cart.getId());
 		cartItemRepo.deleteAllByCartEntity(cart);
