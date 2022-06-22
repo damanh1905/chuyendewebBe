@@ -1,5 +1,7 @@
 package com.example.chuyendeweb.service.imp;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,7 @@ public class OrderImp implements IOrderService {
 		order.setShipFee(changeToOrderRequest.getFeeTotal());
 		UserEntity userEntity = this.iUserService.findById(userDetails.getId());
 		order.setUserEntity(userEntity);
+		order.setDateCreated(new Date());
 		repositoryOrder.save(order);
 		for (int i = 0; i < changeToOrderRequest.getIdProducts().length; i++) {
 			ProductEntity product = productRepo.findById((long) changeToOrderRequest.getIdProducts()[i]).get();
@@ -54,7 +57,7 @@ public class OrderImp implements IOrderService {
 				CartItemEntity cartItemEntity = handleQuantityAndTotalPriceProduct(userEntity, product);
 				orderDetail.setTotalOrderDetailPrice(cartItemEntity.getTotalPrice());
 				orderDetail.setQuantity(cartItemEntity.getQuantity());
-				
+				orderDetail.setDateCreated(new Date());
 
 				orderDetailRepo.save(orderDetail);
 
