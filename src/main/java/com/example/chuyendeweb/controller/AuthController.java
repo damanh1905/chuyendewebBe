@@ -239,6 +239,7 @@ public class AuthController {
                 Optional<UserEntity> user = userpRepository.findByUserName(username);
                 UserReponse userReponse = new UserReponse(user.get().getUserName(), user.get().getEmail(),
                                 user.get().getAddress(), user.get().getPhone(), user.get().getGender());
+                // System.out.println(userReponse);
                 return ResponseEntity.status(HttpStatus.OK).body(userReponse);
         }
 

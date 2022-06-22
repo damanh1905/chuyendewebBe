@@ -64,7 +64,7 @@ public class ProductServiceImp implements IProductService {
         for (ProductEntity productEntity :productDetailEntities) {
 
             responseList.add(this.mapper.map(productEntity,ProductResponse.class));
-            System.out.println(productDetailEntities);
+            //System.out.println(productDetailEntities);
 
         }
         return  responseList;

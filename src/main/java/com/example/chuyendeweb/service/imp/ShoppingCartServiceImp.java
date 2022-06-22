@@ -72,7 +72,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
             }
         }
         ChangeToCartResponse toCartResponse = mapper.map(updatingCartItemEntity,ChangeToCartResponse.class);
-        System.out.println(toCartResponse);
+        //System.out.println(toCartResponse);
         return toCartResponse;
     }
 
@@ -131,7 +131,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
 	       UserEntity userEntity = iUserService.findById(userDetails.getId());
 	        CartEntity cartEntity = cartRespository.findByUserEntity(userEntity);
 	        if(cartEntity == null){
-	            System.out.println("chưa có cart nên kh show Order");
+	            //System.out.println("chưa có cart nên kh show Order");
 	        }
 
 	        List<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();

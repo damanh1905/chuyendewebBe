@@ -70,7 +70,7 @@ public class OrderImp implements IOrderService {
 		repositoryOrder.save(order);
 		
 		CartEntity cart = cartRepo.findByUserEntity(userEntity);
-		System.out.println("iddddd" + cart.getId());
+		//System.out.println("iddddd" + cart.getId());
 		cartItemRepo.deleteAllByCartEntity(cart);
 
 	}

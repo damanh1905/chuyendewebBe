@@ -35,8 +35,8 @@ public class OrderController {
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 		orderService.saveToOrder(userDetails,changeToOrderRequest);
-		System.out.println(changeToOrderRequest);
-		System.out.println(userDetails);
+		// //System.out.println(changeToOrderRequest);
+		// //System.out.println(userDetails);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ResponseObject(HttpStatus.OK.value(), "show CheckOut successful!", new Integer(3)));
 	}
