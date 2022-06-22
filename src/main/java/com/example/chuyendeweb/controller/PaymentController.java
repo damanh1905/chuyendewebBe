@@ -33,12 +33,13 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("api/payment")
 public class PaymentController {
 	@Autowired
+	private PaypalService paypalService;
+	@Autowired
 	IOrderService orderService;
 	public static final String URL_PAYPAL_SUCCESS = "pay/success";
 	public static final String URL_PAYPAL_CANCEL = "pay/cancel";
 	private Logger log = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private PaypalService paypalService;
+
 	public ChangeToOrderRequest changeToOrderRequestNe;
 	public CustomUserDetails userDetails;
 	@PostMapping("/pay")
@@ -84,7 +85,7 @@ public class PaymentController {
 				orderService.saveToOrder(userDetails,changeToOrderRequestNe);
 			
 				
-			return "thanh cong roi";
+			return "Thành công rồi hãy ấn nút checkout để thanh toán";
 			}
 		} catch (PayPalRESTException e) {
 			log.error(e.getMessage());
