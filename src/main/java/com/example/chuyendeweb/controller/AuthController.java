@@ -2,6 +2,7 @@ package com.example.chuyendeweb.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
@@ -37,6 +38,8 @@ import com.example.chuyendeweb.model.request.VerifyCodeReq;
 import com.example.chuyendeweb.model.response.JwtResponse;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.model.response.TokenRefreshResponse;
+import com.example.chuyendeweb.model.response.UserReponse;
+import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
@@ -46,178 +49,197 @@ import com.example.chuyendeweb.util.JwtUtils;
 
 @RequestMapping("/api/auth")
 public class AuthController {
-    @Autowired
-    AuthenticationManager authenticationManager;
+        @Autowired
+        AuthenticationManager authenticationManager;
 
-    @Autowired
-    PasswordEncoder encoder;
-    @Autowired
-    JwtUtils jwtUtils;
+        @Autowired
+        PasswordEncoder encoder;
+        @Autowired
+        JwtUtils jwtUtils;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
+        @Autowired
+        RefreshTokenService refreshTokenService;
 
-    @Autowired
-    IUserService iUserService;
+        @Autowired
+        IUserService iUserService;
+        @Autowired
+        UserRepository userpRepository;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginReq LoginReq, HttpServletResponse response) {
+        @PostMapping("/login")
+        public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginReq LoginReq, HttpServletResponse response) {
 
-        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(LoginReq.getUsername(),
-                LoginReq.getPassword());
-        String jwt = jwtUtils.generateJwtToken(userDetails);
+                CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(LoginReq.getUsername(),
+                                LoginReq.getPassword());
+                String jwt = jwtUtils.generateJwtToken(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                                .collect(Collectors.toList());
 
-        RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
-        // Cookie cookie = new Cookie("token",jwt);
-        // cookie.setMaxAge(7 * 24 * 60 * 60); //
-        // cookie.setHttpOnly(true);
-        // cookie.setPath("/"); // global cookie accessible every where
-        // Cookie refresh = new Cookie("refreshToken",refreshToken.getToken());
-        // refresh.setMaxAge(7 * 24 * 60 * 60); // expires in 7 days
-        // refresh.setSecure(true);
-        // refresh.setMaxAge(0);
-        // refresh.setHttpOnly(true);
-        // refresh.setPath("/"); // global cookie accessible every where
-        // response.addCookie(cookie);
-        // response.addCookie(refresh);
+                RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+                // Cookie cookie = new Cookie("token",jwt);
+                // cookie.setMaxAge(7 * 24 * 60 * 60); //
+                // cookie.setHttpOnly(true);
+                // cookie.setPath("/"); // global cookie accessible every where
+                // Cookie refresh = new Cookie("refreshToken",refreshToken.getToken());
+                // refresh.setMaxAge(7 * 24 * 60 * 60); // expires in 7 days
+                // refresh.setSecure(true);
+                // refresh.setMaxAge(0);
+                // refresh.setHttpOnly(true);
+                // refresh.setPath("/"); // global cookie accessible every where
+                // response.addCookie(cookie);
+                // response.addCookie(refresh);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
-                        userDetails.getUsername(), userDetails.getEmail(), roles));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterReq RegisterReq)
-            throws MessagingException, IOException {
-        String result = iUserService.registerUser(RegisterReq);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, result, ""));
-    }
-
-    @PostMapping(value = "/registerEmail")
-    public ResponseEntity<?> registerEmail(@Valid @RequestBody RegisterEmail registerEmail)
-            throws MessagingException, IOException {
-        String result = this.iUserService.registerEmail(registerEmail);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), result, ""));
-    }
-
-    @PostMapping(value = "/verifyEmail")
-    public ResponseEntity<?> VerifyEmail(@Valid @RequestBody VerifyCodeReq verifyCode) {
-        boolean isCheckVerify = iUserService.verify(verifyCode.getVerifyCodeEmail());
-        if (isCheckVerify)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.OK.value(), "Verification successful, you can now login", ""));
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
-                        "Verification failed,you need to check the verifyCode in the Email or verifyCode expire", ""));
-    }
-
-    @PostMapping("/refreshVerifyCode")
-    public ResponseEntity<?> refreshVerifyCode(@Valid @RequestBody EmailReq refreshVerifyCodeReq) {
-        boolean existEmail = iUserService.refeshVerifyCode(refreshVerifyCodeReq.getEmail());
-        if (existEmail)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.OK.value(),
-                            "please check your email for verification instructions", ""));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "This email does not exist in the database",
-                        ""));
-    }
-
-    @PostMapping(value = "/forgot-password")
-    public ResponseEntity<?> forgotPassword(@Valid @RequestBody EmailReq forgotReq) {
-        boolean isCheckforgot = iUserService.checkForgot(forgotReq.getEmail());
-        if (isCheckforgot)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.OK.value(),
-                            "please check your email for verification instructions", ""));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
-                        "Verification failed,the email you entered is wrong", ""));
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
-        boolean resetPassword = iUserService.ResetPassword(resetPasswordRequest);
-        if (resetPassword)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.OK.value(), "reset Password successful", ""));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "reset Password fail", ""));
-
-    }
-
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshReq request) {
-        String requestRefreshToken = request.getRefreshToken();
-
-        return refreshTokenService.findByToken(requestRefreshToken)
-                .map(refreshTokenService::verifyExpiration)
-                .map(RefreshTokenEntity::getUserEntity)
-                .map(user -> {
-                    String token = jwtUtils.generateTokenFromUsername(user.getUserName());
-                    return ResponseEntity
-                            .ok(new TokenRefreshResponse(HttpStatus.OK.value(), token, requestRefreshToken));
-                })
-                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-                        "Refresh token is not in database!"));
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<?> logoutUser(@RequestParam(value = "userName") String userName) {
-        boolean isCheckLogOut = iUserService.checklogout(userName);
-        if (isCheckLogOut) {
-            return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Log out successful!", ""));
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(),
+                                                userDetails.getId(),
+                                                userDetails.getUsername(), userDetails.getEmail(), roles));
         }
-        return ResponseEntity.ok(new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Log out fail!", ""));
-    }
 
-    @GetMapping("/checkUserName")
-    public ResponseEntity<?> checkUser(@RequestParam String username) {
-        boolean check = this.iUserService.finByUserName(username);
-        if (check)
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit user!", ""));
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
-    }
-
-    @GetMapping("/checkLoginGG")
-    public ResponseEntity<?> checkLoginGG(@RequestParam String username, @RequestParam String email) {
-        boolean check = this.iUserService.finByUserName(username);
-        if (check) {
-            UserEntity user = this.iUserService.finByName(username);
-            CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(), "12345678");
-            String jwt = jwtUtils.generateJwtToken(userDetails);
-            List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
-            RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
-                            userDetails.getUsername(), userDetails.getEmail(), roles));
+        @PostMapping("/register")
+        public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterReq RegisterReq)
+                        throws MessagingException, IOException {
+                String result = iUserService.registerUser(RegisterReq);
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(200, result, ""));
         }
-        UserEntity user = this.iUserService.setUserToGG(username, email);
-        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(), "12345678");
-        String jwt = jwtUtils.generateJwtToken(userDetails);
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-        RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(), userDetails.getId(),
-                        userDetails.getUsername(), userDetails.getEmail(), roles));
 
-    }
+        @PostMapping(value = "/registerEmail")
+        public ResponseEntity<?> registerEmail(@Valid @RequestBody RegisterEmail registerEmail)
+                        throws MessagingException, IOException {
+                String result = this.iUserService.registerEmail(registerEmail);
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), result, ""));
+        }
 
-    public UserDetails authuticate(String username, String password) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        @PostMapping(value = "/verifyEmail")
+        public ResponseEntity<?> VerifyEmail(@Valid @RequestBody VerifyCodeReq verifyCode) {
+                boolean isCheckVerify = iUserService.verify(verifyCode.getVerifyCodeEmail());
+                if (isCheckVerify)
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ResponseObject(HttpStatus.OK.value(),
+                                                        "Verification successful, you can now login", ""));
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
+                                                "Verification failed,you need to check the verifyCode in the Email or verifyCode expire",
+                                                ""));
+        }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        return userDetails;
-    }
+        @PostMapping("/refreshVerifyCode")
+        public ResponseEntity<?> refreshVerifyCode(@Valid @RequestBody EmailReq refreshVerifyCodeReq) {
+                boolean existEmail = iUserService.refeshVerifyCode(refreshVerifyCodeReq.getEmail());
+                if (existEmail)
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ResponseObject(HttpStatus.OK.value(),
+                                                        "please check your email for verification instructions", ""));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
+                                                "This email does not exist in the database",
+                                                ""));
+        }
+
+        @PostMapping(value = "/forgot-password")
+        public ResponseEntity<?> forgotPassword(@Valid @RequestBody EmailReq forgotReq) {
+                boolean isCheckforgot = iUserService.checkForgot(forgotReq.getEmail());
+                if (isCheckforgot)
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ResponseObject(HttpStatus.OK.value(),
+                                                        "please check your email for verification instructions", ""));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
+                                                "Verification failed,the email you entered is wrong", ""));
+        }
+
+        @PostMapping("/reset-password")
+        public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+                boolean resetPassword = iUserService.ResetPassword(resetPasswordRequest);
+                if (resetPassword)
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ResponseObject(HttpStatus.OK.value(), "reset Password successful",
+                                                        ""));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "reset Password fail", ""));
+
+        }
+
+        @PostMapping("/refreshtoken")
+        public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshReq request) {
+                String requestRefreshToken = request.getRefreshToken();
+
+                return refreshTokenService.findByToken(requestRefreshToken)
+                                .map(refreshTokenService::verifyExpiration)
+                                .map(RefreshTokenEntity::getUserEntity)
+                                .map(user -> {
+                                        String token = jwtUtils.generateTokenFromUsername(user.getUserName());
+                                        return ResponseEntity
+                                                        .ok(new TokenRefreshResponse(HttpStatus.OK.value(), token,
+                                                                        requestRefreshToken));
+                                })
+                                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                                                "Refresh token is not in database!"));
+        }
+
+        @GetMapping("/logout")
+        public ResponseEntity<?> logoutUser(@RequestParam(value = "userName") String userName) {
+                boolean isCheckLogOut = iUserService.checklogout(userName);
+                if (isCheckLogOut) {
+                        return ResponseEntity.ok(new ResponseObject(HttpStatus.OK.value(), "Log out successful!", ""));
+                }
+                return ResponseEntity.ok(new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Log out fail!", ""));
+        }
+
+        @GetMapping("/checkUserName")
+        public ResponseEntity<?> checkUser(@RequestParam String username) {
+                boolean check = this.iUserService.finByUserName(username);
+                if (check)
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "exit user!", ""));
+
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(new ResponseObject(HttpStatus.OK.value(), "successful!", ""));
+        }
+
+        @GetMapping("/checkLoginGG")
+        public ResponseEntity<?> checkLoginGG(@RequestParam String username, @RequestParam String email) {
+                boolean check = this.iUserService.finByUserName(username);
+                if (check) {
+                        UserEntity user = this.iUserService.finByName(username);
+                        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(),
+                                        "12345678");
+                        String jwt = jwtUtils.generateJwtToken(userDetails);
+                        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                                        .collect(Collectors.toList());
+                        RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+                        return ResponseEntity.status(HttpStatus.OK)
+                                        .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(),
+                                                        userDetails.getId(),
+                                                        userDetails.getUsername(), userDetails.getEmail(), roles));
+                }
+                UserEntity user = this.iUserService.setUserToGG(username, email);
+                CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(user.getUserName(), "12345678");
+                String jwt = jwtUtils.generateJwtToken(userDetails);
+                List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                                .collect(Collectors.toList());
+                RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+                return ResponseEntity.status(HttpStatus.OK)
+                                .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(),
+                                                userDetails.getId(),
+                                                userDetails.getUsername(), userDetails.getEmail(), roles));
+
+        }
+
+        public UserDetails authuticate(String username, String password) {
+                Authentication authentication = authenticationManager
+                                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                return userDetails;
+        }
+
+        @GetMapping("/getCurrentUser")
+        public ResponseEntity<?> getCurrentUser(@RequestParam String username) {
+                Optional<UserEntity> user = userpRepository.findByUserName(username);
+                UserReponse userReponse = new UserReponse(user.get().getUserName(), user.get().getEmail(),
+                                user.get().getAddress(), user.get().getPhone(), user.get().getGender());
+                return ResponseEntity.status(HttpStatus.OK).body(userReponse);
+        }
 
 }
