@@ -21,7 +21,7 @@ class ChuyendewebBeApplicationTests {
         Optional<UserEntity> user = userpRepository.findByUserName("sa123456");
         UserReponse userReponse = new UserReponse(user.get().getUserName(), user.get().getEmail(),
                         user.get().getAddress(), user.get().getPhone(), user.get().getGender());
-                        //System.out.println(userReponse);
+                        System.out.println(userReponse);
     }
 
 }
