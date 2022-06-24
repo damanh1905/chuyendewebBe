@@ -53,7 +53,7 @@ public class OrderImp implements IOrderService {
 				OrderDetailEntity orderDetail = new OrderDetailEntity();
 				orderDetail.setProductEntity(product);
 				orderDetail.setOrderEntity(order);
-//				xu li quantity & totalOrderDetailPrice
+				// xu li quantity & totalOrderDetailPrice
 				CartItemEntity cartItemEntity = handleQuantityAndTotalPriceProduct(userEntity, product);
 				orderDetail.setTotalOrderDetailPrice(cartItemEntity.getTotalPrice());
 				orderDetail.setQuantity(cartItemEntity.getQuantity());
@@ -61,16 +61,14 @@ public class OrderImp implements IOrderService {
 
 				orderDetailRepo.save(orderDetail);
 
-			
-
 			}
 
 		}
-//		xoa từng cartItem theo Id của cartId
+		// xoa từng cartItem theo Id của cartId
 		repositoryOrder.save(order);
-		
+
 		CartEntity cart = cartRepo.findByUserEntity(userEntity);
-		//System.out.println("iddddd" + cart.getId());
+		// System.out.println("iddddd" + cart.getId());
 		cartItemRepo.deleteAllByCartEntity(cart);
 
 	}

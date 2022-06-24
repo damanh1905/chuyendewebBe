@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chuyendeweb.entity.RefreshTokenEntity;
 import com.example.chuyendeweb.entity.UserEntity;
+import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.exception.TokenRefreshException;
 import com.example.chuyendeweb.model.request.EmailReq;
 import com.example.chuyendeweb.model.request.LoginReq;
@@ -236,11 +237,31 @@ public class AuthController {
 
         @GetMapping("/getCurrentUser")
         public ResponseEntity<?> getCurrentUser(@RequestParam String username) {
+                if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+                        throw new NotFoundException("please login to purchase!");
+                }
                 Optional<UserEntity> user = userpRepository.findByUserName(username);
                 UserReponse userReponse = new UserReponse(user.get().getUserName(), user.get().getEmail(),
-                                user.get().getAddress(), user.get().getPhone(), user.get().getGender());
-                // System.out.println(userReponse);
+                                user.get().getPhone(), user.get().getGender());
                 return ResponseEntity.status(HttpStatus.OK).body(userReponse);
         }
 
+        @PostMapping("/updateUser")
+        public ResponseEntity<?> updateUser(@Valid @RequestBody UserReponse userReponse) {
+                if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+                        throw new NotFoundException("please login to purchase!");
+                }
+                try {
+                        UserEntity userEntity = iUserService.finByName(userReponse.getUserName());
+                        userEntity.setUserName(userReponse.getUserName());
+                        userEntity.setEmail(userReponse.getEmail());
+                        userEntity.setPhone(userReponse.getPhone());
+                        userEntity.setGender(userReponse.getGender());
+                        userpRepository.save(userEntity);
+                        return ResponseEntity.status(HttpStatus.OK).body(new String("chinh sua thong cong"));
+                } catch (Exception e) {
+                        throw e;
+                }
+
+        }
 }
