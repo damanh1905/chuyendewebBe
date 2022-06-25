@@ -86,6 +86,7 @@ public class UserServiceImp implements IUserService {
         if (check) {
             user = this.userRepository.findByUserName(registerEmail.getName()).get();
             sendEmailUtils.sendEmailWithAttachment(user, user.getVerificationCode());
+            userRepository.save(user);
             System.out.println(user);
             return "please check your email for verification instructions";
         }
