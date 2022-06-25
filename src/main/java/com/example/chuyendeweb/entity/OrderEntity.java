@@ -41,7 +41,7 @@ public class OrderEntity extends BaseEntity {
 
 	//
 	@JsonIgnore
-	@OneToMany(mappedBy = "orderEntity")
+	@OneToMany(mappedBy = "orderEntity",cascade = CascadeType.ALL)
 	private List<OrderDetailEntity> orderDetail;
 	
 

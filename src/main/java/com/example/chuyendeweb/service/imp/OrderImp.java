@@ -107,4 +107,10 @@ public class OrderImp implements IOrderService {
 		
 	}
 
+	@Override
+	public void deleteOrderByOrderId(Long orderId) {
+		repositoryOrder.deleteOneById(orderId);
+		
+	}
+
 }

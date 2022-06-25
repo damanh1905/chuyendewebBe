@@ -10,4 +10,6 @@ public interface IOrderService {
 	void saveToOrder(CustomUserDetails userDetails, ChangeToOrderRequest changeToOrderRequest);
 
 	List<ChangeToOrderResponseByUser> showListOrderByUserId(CustomUserDetails userDetails);
+
+	void deleteOrderByOrderId(Long orderId);
 }
