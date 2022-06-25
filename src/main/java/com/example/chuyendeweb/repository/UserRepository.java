@@ -28,6 +28,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u where  u.verifiForgot = ?1")
     UserEntity findByVerifiForgot(int verifiForgot);
 
+	UserEntity findOnedById(Long id);
+
 
 
 }

@@ -17,6 +17,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
+@Getter
+@Setter
 public class OrderEntity extends BaseEntity {
 	private String address;
 	@Column
@@ -30,9 +32,7 @@ public class OrderEntity extends BaseEntity {
 	@Column
 	private String paymenId;
 	@Column
-	private Date dateCreate;
-	@Column
-	private Date dateDelivery;
+	private String phoneNumber;
 	// user voi
 	@JsonIgnore
 	@ManyToOne

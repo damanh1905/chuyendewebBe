@@ -1,7 +1,10 @@
 package com.example.chuyendeweb.service.imp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +15,13 @@ import com.example.chuyendeweb.entity.OrderEntity;
 import com.example.chuyendeweb.entity.ProductEntity;
 import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
+import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.repository.CartItemRepository;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.OrderDetailRepository;
 import com.example.chuyendeweb.repository.OrderRepository;
 import com.example.chuyendeweb.repository.ProductRepository;
+import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IOrderService;
 import com.example.chuyendeweb.service.IUserService;
@@ -37,12 +42,20 @@ public class OrderImp implements IOrderService {
 	CartRepository cartRepo;
 	@Autowired
 	CartItemRepository cartItemRepo;
+	@Autowired
+	ModelMapper mapper;
+	@Autowired
+	UserRepository userRepo;
 
 	@Override
 	public void saveToOrder(CustomUserDetails userDetails, ChangeToOrderRequest changeToOrderRequest) {
 		OrderEntity order = new OrderEntity();
 		order.setTotalPriceOrder(changeToOrderRequest.getTotal());
 		order.setShipFee(changeToOrderRequest.getFeeTotal());
+//		
+		order.setAddress(changeToOrderRequest.getAddress());
+		order.setPhoneNumber(changeToOrderRequest.getPhoneNumber());
+//		
 		UserEntity userEntity = this.iUserService.findById(userDetails.getId());
 		order.setUserEntity(userEntity);
 		order.setDateCreated(new Date());
@@ -79,6 +92,19 @@ public class OrderImp implements IOrderService {
 
 		return cartItemEntity;
 
+	}
+
+	@Override
+	public List<ChangeToOrderResponseByUser> showListOrderByUserId(CustomUserDetails userDetails) {
+		 UserEntity user = userRepo.findOnedById(userDetails.getId());
+		 List<OrderEntity> orders=repositoryOrder.findByUserEntityId(user.getId());
+//		 System.out.println(user);
+		 List<ChangeToOrderResponseByUser> result = new ArrayList<>();
+		 for (OrderEntity order : orders) {
+			 result.add(this.mapper.map(order,ChangeToOrderResponseByUser.class));
+		}
+		 return result;
+		
 	}
 
 }
