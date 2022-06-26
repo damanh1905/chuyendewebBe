@@ -7,6 +7,7 @@ import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.ChangeToCartReq;
 import com.example.chuyendeweb.model.response.ChangeToCartResponse;
+import com.example.chuyendeweb.model.response.ChangeToOrderResponse;
 import com.example.chuyendeweb.repository.CartItemRepository;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.ProductRepository;
@@ -71,7 +72,7 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
             }
         }
         ChangeToCartResponse toCartResponse = mapper.map(updatingCartItemEntity,ChangeToCartResponse.class);
-        System.out.println(toCartResponse);
+        //System.out.println(toCartResponse);
         return toCartResponse;
     }
 
@@ -125,5 +126,21 @@ public class ShoppingCartServiceImp implements IShoppingCartService {
         return result;
     }
 
+	@Override
+	public List<ChangeToOrderResponse> showOrder(CustomUserDetails userDetails) {
+	       UserEntity userEntity = iUserService.findById(userDetails.getId());
+	        CartEntity cartEntity = cartRespository.findByUserEntity(userEntity);
+	        if(cartEntity == null){
+	            //System.out.println("chưa có cart nên kh show Order");
+	        }
+
+	        List<CartItemEntity> cartItemEntities = cartEntity.getCartItemEntity();
+	        List<ChangeToOrderResponse> result = new ArrayList<>();
+	        for (CartItemEntity cartItemEntity:cartItemEntities) {
+	        	ChangeToOrderResponse toCartResponse = this.mapper.map(cartItemEntity,ChangeToOrderResponse.class);
+	            result.add(toCartResponse);
+	        }
+	        return result;
+	}
 
 }

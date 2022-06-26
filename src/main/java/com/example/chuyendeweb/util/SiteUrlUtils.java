@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class SiteUrlUtils {
     public String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
-        System.out.println(siteURL.replace(request.getServletPath(), ""));
+        //System.out.println(siteURL.replace(request.getServletPath(), ""));
         return siteURL.replace(request.getServletPath(), "");
     }
 }

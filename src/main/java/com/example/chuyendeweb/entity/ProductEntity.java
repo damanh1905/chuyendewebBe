@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Getter
@@ -16,9 +19,9 @@ import java.util.List;
 @Table(name = "product")
 public class ProductEntity extends BaseEntity {
     @Column
-    private int Price;
+    private int price;
     @Column
-    private int Price_Sale;
+    private int price_Sale;
     @Column
     private int amount;
     @Column
@@ -33,6 +36,18 @@ public class ProductEntity extends BaseEntity {
     private Date importDate;
     @Column
     private Date expiryDate;
+    @JsonIgnore
+    @ManyToMany( fetch = FetchType.EAGER)
+    @JoinTable(name = "productGender", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns = {
+            @JoinColumn(name = "genderId") })
+
+    private Set<GendersEntity> genders;
+    @JsonIgnore
+    @ManyToMany( fetch = FetchType.EAGER)
+    @JoinTable(name = "productAge", joinColumns = { @JoinColumn(name = "productId") }, inverseJoinColumns = {
+            @JoinColumn(name = "ageId") })
+
+    private Set<AgesEntity> ages;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "categoryId")

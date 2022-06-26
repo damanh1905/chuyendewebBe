@@ -13,26 +13,25 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 
-@Table(name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "userName"),
-        })
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "userName"),
+})
 public class UserEntity extends BaseEntity {
 
-//    @Size(max = 20)
-//    @Length(min = 5,max = 20, message = "*Your password must have at least 5 characters")
+    // @Size(max = 20)
+    // @Length(min = 5,max = 20, message = "*Your password must have at least 5
+    // characters")
     @Column
     private String userName;
     @Column
     @NotBlank
-//    @Size(max = 50)
+    // @Size(max = 50)
     private String email;
     @Column
-//    @Size(max = 120)
+    // @Size(max = 120)
     private String passwords;
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "userRoles",
-            joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))
+    @JoinTable(name = "userRoles", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<RoleEntity> roles = new HashSet<>();
     @Column
     private String address;
@@ -61,10 +60,22 @@ public class UserEntity extends BaseEntity {
         this.passwords = password;
     }
 
-    public UserEntity(String username,String email) {
+    public UserEntity(String username, String email) {
         this.userName = username;
         this.email = email;
 
     }
 
+    public UserEntity(String username, String email, String phone, String gender) {
+        this.userName = username;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity [email=" + email + ", gender=" + gender + ", passwords=" + passwords + ", phone=" + phone
+                + ", userName=" + userName + "]";
+    }
 }

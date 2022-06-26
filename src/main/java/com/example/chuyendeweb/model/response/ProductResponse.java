@@ -21,6 +21,6 @@ public class ProductResponse {
     private String name;
     private String descriptions;
     private CategoryResponse categoryResponse;
-    private List<ImageEntity> ImageEntity;
+    private List<ImageResponse> ImageEntity;
 
 }

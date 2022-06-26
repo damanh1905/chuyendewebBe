@@ -67,7 +67,7 @@ public class UserServiceImp implements IUserService {
         addRolesToUser(strRoles, roles);
         user.setRoles(roles);
         userRepository.save(user);
-        System.out.println(user.getId());
+        //System.out.println(user.getId());
         refreshTokenService.createRefreshToken(user.getId());
 
      CartEntity cart = new CartEntity(new Date(),user);
@@ -114,7 +114,7 @@ public class UserServiceImp implements IUserService {
                     userRepository.save(user);
                     return true;
                 } else {
-                    System.out.println("code chưa hết hiệu lực");
+                    //System.out.println("code chưa hết hiệu lực");
                     throw new NotFoundException("code has not expired yet ");
                 }
             }
@@ -209,7 +209,7 @@ public class UserServiceImp implements IUserService {
         addRolesToUser(strRoles, roles);
         user.setRoles(roles);
         userRepository.saveAndFlush(user);
-        System.out.println("aaaaaaaaaaaaaaaaaaaa");
+        //System.out.println("aaaaaaaaaaaaaaaaaaaa");
         refreshTokenService.createRefreshToken(user.getId());
         return user;
     }

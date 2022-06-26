@@ -35,7 +35,7 @@ public class CategoryServiceImp implements ICategoryService {
         List<ProductResponse> responseList = new ArrayList<>();
         for (ProductEntity productEntity : productDetailEntities) {
             responseList.add(this.mapper.map(productEntity, ProductResponse.class));
-            System.out.println(productDetailEntities);
+         //System.out.println(productDetailEntities);
         }
         FilterCategory filterCategory = new FilterCategory();
         filterCategory.setNameCategory(action);

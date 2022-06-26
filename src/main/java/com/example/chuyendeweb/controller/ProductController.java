@@ -5,22 +5,17 @@ import com.example.chuyendeweb.model.response.ProductResponse;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 @RestController
-//@CrossOrigin(origins = "*", maxAge = 360)
 @RequestMapping("api/product")
     public class ProductController {
     @Autowired
@@ -38,17 +33,29 @@ import java.util.Map;
 //    @PreAuthorize("hasRole('USER')")
     @GetMapping("/ShowAndsearch")
     public ResponseEntity<?> showAndsearchProductEntity(@RequestParam(required = true) String searchValue,
-           @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "10") int pageSize){
+           @RequestParam(defaultValue = "0") int pageIndex,  @RequestParam(defaultValue = "8") int pageSize){
 
             Pageable pageable = PageRequest.of(pageIndex,pageSize);
             Map<String,Object> result= this.iProductService.showAndSearchProduct(searchValue,pageable);
             if(result.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "no product in db", ""));
             }
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "successly!", result));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "successfully!", result));
 
-
-
+    }
+    @GetMapping("/productFilter")
+    public ResponseEntity<?> ShowProductFilter(@RequestParam Map<String,Object> fiterParams,
+                                               @RequestParam(required = false) Long genderId,
+                                               @RequestParam(required = false) List<Long> category,
+                                               @RequestParam(required = false) List<Long> priceRanges,
+                                               @RequestParam(required = false) List<String> ordersProduct,
+                                               @RequestParam(defaultValue = "0") int pageIndex,
+                                               @RequestParam(defaultValue = "9") int pageSize){
+        Map<String,Object> result= this.iProductService.showProductFilter(fiterParams,genderId,category,priceRanges,ordersProduct,pageIndex,pageSize);
+        if(result.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "no product in db", ""));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject(HttpStatus.OK.value(), "successfully!", result));
 
     }
 }

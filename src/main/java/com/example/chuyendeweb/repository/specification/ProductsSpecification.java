@@ -3,10 +3,8 @@ package com.example.chuyendeweb.repository.specification;
 import com.example.chuyendeweb.entity.ProductEntity;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.List;
 
 public class ProductsSpecification implements Specification<ProductEntity> {
 
@@ -22,10 +20,27 @@ public class ProductsSpecification implements Specification<ProductEntity> {
         if (searchCriteria.getOperation().equalsIgnoreCase(">=")) {
             return builder.greaterThanOrEqualTo(
                     root.<String>get(searchCriteria.getKey()), searchCriteria.getValue().toString());
-        }else if(searchCriteria.getOperation().equalsIgnoreCase("=<")){
+
+        }if (searchCriteria.getOperation().equalsIgnoreCase("=")) {
+            return builder.equal(root.<String>get(searchCriteria.getKey()), searchCriteria.getValue());
+        }
+        else if(searchCriteria.getOperation().equalsIgnoreCase("=<")){
             return builder.lessThanOrEqualTo(
                     root.<String> get(searchCriteria.getKey()),searchCriteria.getValue().toString());
-        }else if(searchCriteria.getOperation().equalsIgnoreCase(":")){
+        } else if (searchCriteria.getOperation().equalsIgnoreCase("in")) {
+            Join<ProductEntity, Object> join = root.join(searchCriteria.getKey());
+            query.distinct(true);
+            return builder.in(join.get("id")).value(searchCriteria.getValue());
+        }
+        else if (searchCriteria.getOperation().equalsIgnoreCase("between")) {
+            List<Long> priceRange = (List<Long>) searchCriteria.getValue();
+            System.out.println("size"+priceRange.size());
+            System.out.println("value"+priceRange.toString());
+            long min =  priceRange.get(0);
+            long max =  priceRange.get(1);
+            return builder.between(root.get(searchCriteria.getKey()), min, max);
+        }
+        else if(searchCriteria.getOperation().equalsIgnoreCase(":")){
             if(root.get(searchCriteria.getKey()).getJavaType()== String.class){
                 return builder.like(
                         root.<String> get(searchCriteria.getKey()),"%" +searchCriteria.getValue()+ "%");
