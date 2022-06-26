@@ -13,7 +13,7 @@ public class ChangeToOrderRequest {
 	 private int idProducts[];
 	 private int feeTotal;
 	 private int total;
-	    
-    
-
+	 //
+	 private String address;
+	 private String phoneNumber;
 }
