@@ -15,10 +15,10 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterEmail {
-    @NotBlank
+//    @NotBlank
     @Size(min = 6)
     private String name;
-    @NotBlank
+//    @NotBlank
     @Email(message = "Email không hợp lệ")
     private String email;
 }
