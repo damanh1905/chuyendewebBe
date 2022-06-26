@@ -16,11 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "orderDetail")
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+@Table(name = "orderDetail")
 public class OrderDetailEntity extends BaseEntity {
 	private int quantity;
 	private double totalOrderDetailPrice;

@@ -8,12 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "cartItem")
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "cartItem")
 public class CartItemEntity extends BaseEntity {
     @JsonIgnore
     @ManyToOne
