@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -53,6 +54,9 @@ public class UserEntity extends BaseEntity {
     private RefreshTokenEntity refreshToken;
     @OneToOne(mappedBy = "userEntity")
     private WishListEntity wishList;
+    
+    @OneToMany(mappedBy = "userEntity")
+	List<SellEntity> listSellEntity;
 
     public UserEntity(String username, String email, String password) {
         this.userName = username;

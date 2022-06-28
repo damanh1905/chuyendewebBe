@@ -68,7 +68,7 @@ public class PaymentController {
 
 			}
 		} catch (PayPalRESTException e) {
-			log.error(e.getMessage());
+			log.error(e.getMessage()+"vl");
 		}
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ResponseObject(HttpStatus.OK.value(), "Lỗi mất tiêu rồi", new Integer(1)));
