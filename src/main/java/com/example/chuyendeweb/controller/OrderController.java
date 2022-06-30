@@ -46,6 +46,7 @@ public class OrderController {
 	public ResponseEntity<?> getListOrderByUserId() {
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
+		System.out.println(userDetails);
 		List<ChangeToOrderResponseByUser> listNe=orderService.showListOrderByUserId(userDetails);
 	
 	return ResponseEntity.status(HttpStatus.OK)
