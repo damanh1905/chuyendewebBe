@@ -1,5 +1,17 @@
 package com.example.chuyendeweb.service.imp;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.mail.MessagingException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.example.chuyendeweb.common.ERole;
 import com.example.chuyendeweb.entity.CartEntity;
 import com.example.chuyendeweb.entity.RefreshTokenEntity;
@@ -16,16 +28,6 @@ import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
 import com.example.chuyendeweb.util.SendEmailUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class UserServiceImp implements IUserService {
@@ -46,32 +48,30 @@ public class UserServiceImp implements IUserService {
     @Value("${jtw.app.timeVerifycode}")
     private int timeVerifyCode;
 
-
     @Override
     public String registerUser(RegisterReq RegisterReq) throws IOException, MessagingException {
-//        if (userRepository.existsByUserName(RegisterReq.getUsername())) {
-//            throw new BadRequestException("Error: Username is already taken!");
-//        }
-//        if (userRepository.existsByEmail(RegisterReq.getEmail())) {
-//            throw new BadRequestException("Error: Email is already in use!");
-//        }
+        // if (userRepository.existsByUserName(RegisterReq.getUsername())) {
+        // throw new BadRequestException("Error: Username is already taken!");
+        // }
+        // if (userRepository.existsByEmail(RegisterReq.getEmail())) {
+        // throw new BadRequestException("Error: Email is already in use!");
+        // }
         // Create new user's account
         UserEntity user = this.userRepository.findByUserName(RegisterReq.getUserName()).get();
-        user.setPasswords( encoder.encode(RegisterReq.getPassword()));
+        user.setPasswords(encoder.encode(RegisterReq.getPassword()));
         user.setPhone(RegisterReq.getPhone());
         user.setGender(RegisterReq.getGender());
-
 
         Set<String> strRoles = null;
         Set<RoleEntity> roles = new HashSet<>();
         addRolesToUser(strRoles, roles);
         user.setRoles(roles);
         userRepository.save(user);
-        //System.out.println(user.getId());
+        // System.out.println(user.getId());
         refreshTokenService.createRefreshToken(user.getId());
 
-     CartEntity cart = new CartEntity(new Date(),user);
-       cartRespository.save(cart);
+        CartEntity cart = new CartEntity(new Date(), user);
+        cartRespository.save(cart);
 
         return "registered successfully";
     }
@@ -81,7 +81,7 @@ public class UserServiceImp implements IUserService {
         UserEntity user = new UserEntity(registerEmail.getName(), registerEmail.getEmail());
         user.setEnabled(false);
         setVerifyCodeEmail(user);
-        //case time ơ day
+        // case time ơ day
         boolean check = this.userRepository.existsByUserName(registerEmail.getName());
         if (check) {
             user = this.userRepository.findByUserName(registerEmail.getName()).get();
@@ -114,11 +114,10 @@ public class UserServiceImp implements IUserService {
                     userRepository.save(user);
                     return true;
                 } else {
-                    //System.out.println("code chưa hết hiệu lực");
+                    // System.out.println("code chưa hết hiệu lực");
                     throw new NotFoundException("code has not expired yet ");
                 }
             }
-
 
         } catch (NullPointerException | MessagingException | IOException ex) {
             ex.printStackTrace();
@@ -133,7 +132,8 @@ public class UserServiceImp implements IUserService {
 
         try {
             if (user == null || user.isEnabled()) {
-//                throw new NotFoundException("verificationCode is incorrect or user is disabled");
+                // throw new NotFoundException("verificationCode is incorrect or user is
+                // disabled");
                 return false;
             } else {
                 if (checkTimeVerifyCode(user)) {
@@ -142,7 +142,8 @@ public class UserServiceImp implements IUserService {
                     userRepository.save(user);
                     return true;
                 } else {
-//                  throw  new NotFoundException("verificationCode token was expired. Please make a new refeshVerifyCode");
+                    // throw new NotFoundException("verificationCode token was expired. Please make
+                    // a new refeshVerifyCode");
                     return false;
                 }
 
@@ -157,8 +158,10 @@ public class UserServiceImp implements IUserService {
     @Override
     public boolean checkForgot(String email) {
         UserEntity user = userRepository.findByEmail(email);
+        // System.out.println(user);
         try {
-            if (user == null || user.isEnabled()) {
+            if (user == null || !user.isEnabled()) {
+                // System.out.println("asdfasdf");
                 throw new NotFoundException("email is incorrect or user is disabled");
             } else {
                 int code = (int) Math.floor(((Math.random() * 899999) + 100000));
@@ -168,11 +171,22 @@ public class UserServiceImp implements IUserService {
                 return true;
             }
         } catch (NullPointerException | IOException | MessagingException ex) {
-
             ex.printStackTrace();
-
         }
         return false;
+    }
+
+    @Override
+    public boolean verifyForgot(int verificationCode) {
+        UserEntity user = userRepository.findByVerifiForgot(verificationCode);
+        // System.out.println(user);
+        if (user == null) {
+            return false;
+        } else {
+            user.setVerifiForgot(0);
+            userRepository.save(user);
+            return true;
+        }
     }
 
     @Override
@@ -200,7 +214,8 @@ public class UserServiceImp implements IUserService {
     public boolean checkTimeVerifyCode(UserEntity user) {
         return user.getDateCreated().getTime() + timeVerifyCode - new Date().getTime() >= 0;
     }
-    public UserEntity setUserToGG(String username,String email ){
+
+    public UserEntity setUserToGG(String username, String email) {
         UserEntity user = new UserEntity(username, email);
         user.setEnabled(true);
         user.setPasswords(encoder.encode("12345678"));
@@ -209,10 +224,11 @@ public class UserServiceImp implements IUserService {
         addRolesToUser(strRoles, roles);
         user.setRoles(roles);
         userRepository.saveAndFlush(user);
-        //System.out.println("aaaaaaaaaaaaaaaaaaaa");
+        // System.out.println("aaaaaaaaaaaaaaaaaaaa");
         refreshTokenService.createRefreshToken(user.getId());
         return user;
     }
+
     public void addRolesToUser(Set<String> strRoles, Set<RoleEntity> roles) {
         if (strRoles == null) {
             RoleEntity userRole = roleRepository.findByName(ERole.ROLE_USER)
@@ -241,7 +257,7 @@ public class UserServiceImp implements IUserService {
     }
 
     @Override
-    public boolean checklogout(String  userName) {
+    public boolean checklogout(String userName) {
         UserEntity user = userRepository.findByUserName(userName).get();
         try {
             if (user == null) {
@@ -262,7 +278,6 @@ public class UserServiceImp implements IUserService {
 
         return false;
     }
-
 
     public void setVerifyCodeEmail(UserEntity user) {
         int code = (int) Math.floor(((Math.random() * 899999) + 100000));
@@ -290,5 +305,3 @@ public class UserServiceImp implements IUserService {
         return userRepository.existsByEmail(email);
     }
 }
-
-

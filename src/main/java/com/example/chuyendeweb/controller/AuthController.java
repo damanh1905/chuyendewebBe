@@ -37,6 +37,7 @@ import com.example.chuyendeweb.model.request.ResetPasswordRequest;
 import com.example.chuyendeweb.model.request.TokenRefreshReq;
 import com.example.chuyendeweb.model.request.VerifyCodeReq;
 import com.example.chuyendeweb.model.response.JwtResponse;
+import com.example.chuyendeweb.model.response.ResetPasswordForEmail;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.model.response.TokenRefreshResponse;
 import com.example.chuyendeweb.model.response.UserReponse;
@@ -264,4 +265,48 @@ public class AuthController {
                 }
 
         }
+        
+           // page ForgotPassword
+           @GetMapping("/refreshVerifyCodeForgotPassword")
+           public ResponseEntity<?> refreshVerifyCodeForgotPassword(@RequestParam String email) {
+                   boolean existEmail = iUserService.checkForgot(email);
+                   if (existEmail)
+                           return ResponseEntity.status(HttpStatus.OK)
+                                           .body(new ResponseObject(HttpStatus.OK.value(),
+                                                           "please check your email for verification instructions", ""));
+                   else
+                           return ResponseEntity.status(HttpStatus.OK)
+                                           .body(new ResponseObject(HttpStatus.OK.value(),
+                                                           "This email does not exist in the database",
+                                                           ""));
+           }
+   
+           // page ForgotPassword
+           @PostMapping(value = "/verifyEmailForgotPassword")
+           public ResponseEntity<?> verifyEmailForgotPassword(@Valid @RequestBody VerifyCodeReq verifyCode) {
+                   System.out.println(verifyCode);
+                   boolean isCheckVerify = iUserService.verifyForgot(verifyCode.getVerifyCodeEmail());
+                   if (isCheckVerify)
+                           return ResponseEntity.status(HttpStatus.OK)
+                                           .body(new ResponseObject(HttpStatus.OK.value(),
+                                                           "Verification successful, you can now login", ""));
+                   else
+                           return ResponseEntity.status(HttpStatus.OK)
+                                           .body(new ResponseObject(HttpStatus.NOT_FOUND.value(),
+                                                           "Verification failed,you need to check the verifyCode in the Email or verifyCode expire",
+                                                           ""));
+           }
+   
+           // page ForgotPassword
+           @PostMapping(value = "/resetPassword")
+           public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordForEmail resetEmail) {
+                   System.out.println(resetEmail.getEmail());
+                   System.out.println(resetEmail.getPassword());
+   
+                   UserEntity userEntity = userpRepository.findByEmail(resetEmail.getEmail());
+                   userEntity.setPasswords(resetEmail.getPassword());
+                   userpRepository.save(userEntity);
+                   return ResponseEntity.status(HttpStatus.OK).body(new String("chinh sua thong cong"));
+   
+           }
 }

@@ -8,9 +8,11 @@ import java.io.IOException;
 
 public interface IUserService {
     UserEntity findById(Long id);
+
     UserEntity finByName(String username);
 
     boolean finByUserName(String username);
+
     boolean finByEmail(String email);
 
     String registerUser(RegisterReq RegisterReq) throws MessagingException, IOException;
@@ -21,14 +23,16 @@ public interface IUserService {
 
     boolean checkForgot(String email);
 
+    boolean verifyForgot(int verificationCode);
 
     boolean ResetPassword(ResetPasswordRequest resetPasswordRequest);
 
     boolean checklogout(String userName);
 
     String registerEmail(RegisterEmail registerEmail) throws MessagingException, IOException;
+
     UserEntity saveAndFlush(UserEntity user);
 
-    UserEntity setUserToGG(String username,String email);
+    UserEntity setUserToGG(String username, String email);
 
 }
