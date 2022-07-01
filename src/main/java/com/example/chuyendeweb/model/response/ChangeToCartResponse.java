@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @ToString
 public class ChangeToCartResponse {
-    private ProductEntity productEntities;
+    private ProductResponse productEntities;
     private int quantity;
     private int totalPrice;
 }

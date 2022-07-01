@@ -10,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WishListItemResponse {
-    private ProductEntity productEntities ;
+    private ProductResponse productEntities ;
     private WishListEntity wishList ;
 }

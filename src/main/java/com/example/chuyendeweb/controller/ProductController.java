@@ -24,6 +24,7 @@ import java.util.Map;
     @GetMapping("/product-detail/{productId}")
     public ResponseEntity<?> showProductDetail(@PathVariable(name = "productId", required = true) Long productId) {
         ProductResponse result = this.iProductService.findById(productId);
+        System.out.println(result);
         if (result == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found product", ""));
 

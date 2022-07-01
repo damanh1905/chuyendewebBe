@@ -83,6 +83,7 @@ public class WishListController {
             list.add(this.mapper.map(wishListItemEntity, WishListItemResponse.class));
 
         }
+        System.out.println(list);
         return ResponseEntity.ok(list);
     }
 
