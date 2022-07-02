@@ -69,7 +69,7 @@ public class ProductServiceImp implements IProductService {
 
     @Override
     public Map<String, Object> showProductFilter(Map<String, Object> fiterParams,
-                                                 Long genderId,
+    											List<Long> genderId,
                                                  List<Long> category,
                                                  List<Long> priceRanges,
                                                  List<String> ordersProduct,

@@ -13,5 +13,5 @@ public interface IProductService {
     ProductResponse findById(Long productId);
     ProductEntity findByIdProduct(long id);
     Map<String,Object> showAndSearchProduct(String searchValue, Pageable pageable);
-    Map<String, Object> showProductFilter(Map<String,Object> fiterParams, Long genderId,List<Long> category,List<Long> priceRanges,List<String> ordersProduct,int pageIndex, int pageSize);
+    Map<String, Object> showProductFilter(Map<String,Object> fiterParams, List<Long> genderId,List<Long> category,List<Long> priceRanges,List<String> ordersProduct,int pageIndex, int pageSize);
 }
