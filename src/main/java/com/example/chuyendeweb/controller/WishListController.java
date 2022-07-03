@@ -44,7 +44,7 @@ public class WishListController {
     @GetMapping("/addWishList")
     public ResponseEntity<?> addWishList(@RequestParam(value = "iDProduct") Long id) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-            throw new NotFoundException("please login to purchase!");
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -58,7 +58,7 @@ public class WishListController {
     public ResponseEntity<?> findAll(@RequestParam String action, @RequestParam(required = false) Long favProductId,
                                      @RequestParam(defaultValue = "0") int pageIndex, @RequestParam(defaultValue = "10") int pageSize) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-            throw new NotFoundException("please login to purchase!");
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity user = this.iUserService.findById(userDetails.getId());
