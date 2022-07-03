@@ -31,7 +31,7 @@ public class OrderController {
 	@PostMapping("checkoutOrder")
 	public ResponseEntity<?> checkoutOrder(@RequestBody ChangeToOrderRequest changeToOrderRequest) {
 		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-			throw new NotFoundException("please login to purchase!");
+			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();

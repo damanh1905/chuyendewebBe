@@ -86,7 +86,8 @@ public class ProductServiceImp implements IProductService {
                         specBuilder.with("genders", "in", genderId);
                         break;
                     case "categoryId":
-                        System.out.println("key" + key);
+                        // System.out.println("key" + key);
+                        // System.out.println("categoryNe" + category);
                         specBuilder.with("categoryEntity", "in", category);
                         break;
                     // case "ageIds":
