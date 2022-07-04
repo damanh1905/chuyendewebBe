@@ -65,10 +65,11 @@ public class ProductController {
             @RequestParam(required = false) List<Long> category,
             @RequestParam(required = false) List<Long> priceRanges,
             @RequestParam(required = false) List<String> ordersProduct,
+            @RequestParam(required = false) List<String> brandProducts,
             @RequestParam(defaultValue = "0") int pageIndex,
             @RequestParam(defaultValue = "9") int pageSize) {
         Map<String, Object> result = this.iProductService.showProductFilter(fiterParams, genderId, category,
-                priceRanges, ordersProduct, pageIndex, pageSize);
+                priceRanges, ordersProduct,brandProducts, pageIndex, pageSize);
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "no product in db", ""));

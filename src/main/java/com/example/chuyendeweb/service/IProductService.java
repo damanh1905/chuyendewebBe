@@ -17,7 +17,7 @@ public interface IProductService {
     Map<String, Object> showAndSearchProduct(String searchValue, Pageable pageable);
 
     Map<String, Object> showProductFilter(Map<String, Object> fiterParams, Long genderId, List<Long> category,
-            List<Long> priceRanges, List<String> ordersProduct, int pageIndex, int pageSize);
+            List<Long> priceRanges, List<String> ordersProduct, List<String> brandProducts, int pageIndex, int pageSize);
 
     public List<ProductResponse> covertProductEntityToResponse(List<ProductEntity> productDetailEntities);
 

@@ -74,6 +74,7 @@ public class ProductServiceImp implements IProductService {
             List<Long> category,
             List<Long> priceRanges,
             List<String> ordersProduct,
+            List<String> brandProducts,
             int pageIndex, int pageSize) {
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
         ProductSpecificationsBuilder specBuilder = new ProductSpecificationsBuilder();
@@ -100,6 +101,13 @@ public class ProductServiceImp implements IProductService {
                     case "page":
                         specBuilder.with("isNew", "=", true);
                         break;
+                    case "brand":
+                    	System.out.println("branddd");
+                    	System.out.println(brandProducts);
+                        for (String string : brandProducts) {
+                        	 specBuilder.with("sourceOrigin", "=", string);
+						}
+                    	break;
                     case "order":
                         System.out.println("key" + key);
                         String orderBy = ordersProduct.get(0);
