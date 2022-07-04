@@ -19,5 +19,7 @@ public interface IProductService {
     Map<String, Object> showProductFilter(Map<String, Object> fiterParams, Long genderId, List<Long> category,
             List<Long> priceRanges, List<String> ordersProduct, int pageIndex, int pageSize);
 
+    public List<ProductResponse> covertProductEntityToResponse(List<ProductEntity> productDetailEntities);
+
     public List<ProductEntity> getRandomProduct(List<ProductEntity> list, int totalItems);
 }

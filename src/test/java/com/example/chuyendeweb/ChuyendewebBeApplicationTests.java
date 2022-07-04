@@ -1,21 +1,23 @@
 package com.example.chuyendeweb;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.chuyendeweb.entity.ProductEntity;
 import com.example.chuyendeweb.entity.UserEntity;
+import com.example.chuyendeweb.model.response.ProductResponse;
 import com.example.chuyendeweb.model.response.UserReponse;
 import com.example.chuyendeweb.repository.ProductRepository;
 import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.service.IProductService;
 import com.example.chuyendeweb.service.IUserService;
-
-import java.util.List;
 
 @SpringBootTest
 class ChuyendewebBeApplicationTests {
@@ -30,6 +32,8 @@ class ChuyendewebBeApplicationTests {
     IProductService iProductService;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    ModelMapper mapper;
 
     @Test
     void test1() {
@@ -59,8 +63,25 @@ class ChuyendewebBeApplicationTests {
 
     @Test
     void test4() {
-        // List<ProductEntity> result = this.productRepository.findAll();
-        List<ProductEntity> result = this.iProductService.getRandomProduct(this.productRepository.findAll(), 51);
-        System.out.println(result);
+
+        List<ProductEntity> listEntity = this.productRepository.findAll();
+        // List<ProductResponse> result = new ArrayList<>();
+        for (ProductEntity productEntity : listEntity) {
+            // System.out.println(this.iProductService.findById(productEntity.getId()));
+            // result.add(this.iProductService.findById(productEntity.getId()));
+        }
+        // List<ProductEntity> result =
+        // this.iProductService.getRandomProduct(this.productRepository.findAll(), 51);
+
+        // List<ProductResponse> result =
+        // this.iProductService.covertProductEntityToResponse(listEntity);
+
+        List<ProductResponse> responseList = new ArrayList<>();
+        for (ProductEntity productEntity : listEntity) {
+            System.out.println(productEntity);
+            responseList.add(this.mapper.map(productEntity, ProductResponse.class));
+        }
+
+        System.out.println(responseList);
     }
 }
