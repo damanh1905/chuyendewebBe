@@ -80,7 +80,7 @@ public class ProductController {
 
     @GetMapping("/randomProduct")
     public ResponseEntity<?> randomProduct(@RequestParam(value = "numberProduct") int numberProduct) {
-        List<ProductEntity> result = this.iProductService.getRandomProduct(this.productRepository.findAll(),
+        List<ProductResponse> result = this.iProductService.getRandomProduct(this.productRepository.findAll(),
                 numberProduct);
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

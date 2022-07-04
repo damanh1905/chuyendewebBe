@@ -21,5 +21,5 @@ public interface IProductService {
 
     public List<ProductResponse> covertProductEntityToResponse(List<ProductEntity> productDetailEntities);
 
-    public List<ProductEntity> getRandomProduct(List<ProductEntity> list, int totalItems);
+    public List<ProductResponse> getRandomProduct(List<ProductEntity> list, int totalItems);
 }

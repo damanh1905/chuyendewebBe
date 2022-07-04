@@ -31,7 +31,7 @@ public class SellController {
 	@PostMapping("postSell")
 	public ResponseEntity<?> postSell(@RequestBody ChangeToSellReq changeToSellReq) throws IOException{
 		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-			throw new NotFoundException("please login to purchase!");
+			  return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();

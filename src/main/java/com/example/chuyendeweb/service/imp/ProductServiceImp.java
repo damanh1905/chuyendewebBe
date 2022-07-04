@@ -157,7 +157,7 @@ public class ProductServiceImp implements IProductService {
         return responseList;
     }
 
-    public List<ProductEntity> getRandomProduct(List<ProductEntity> list, int totalItems) {
+    public List<ProductResponse> getRandomProduct(List<ProductEntity> list, int totalItems) {
         Random rand = new Random();
         List<ProductEntity> newList = new ArrayList<>();
         int numberProduct = ((totalItems <= list.size()) ? totalItems : list.size());
@@ -165,6 +165,11 @@ public class ProductServiceImp implements IProductService {
             int randomIndex = rand.nextInt(list.size());
             newList.add(list.get(randomIndex));
         }
-        return newList;
+        List<ProductResponse> responseList = new ArrayList<>();
+        for (ProductEntity productEntity : newList) {
+            responseList.add(this.mapper.map(productEntity, ProductResponse.class));
+            // System.out.println(productDetailEntities);
+        }
+        return responseList;
     }
 }
