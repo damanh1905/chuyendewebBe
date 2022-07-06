@@ -4,6 +4,8 @@ import com.example.chuyendeweb.entity.ProductEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductsSpecification implements Specification<ProductEntity> {
@@ -28,10 +30,18 @@ public class ProductsSpecification implements Specification<ProductEntity> {
             return builder.lessThanOrEqualTo(
                     root.<String> get(searchCriteria.getKey()),searchCriteria.getValue().toString());
         } else if (searchCriteria.getOperation().equalsIgnoreCase("in")) {
-            Join<ProductEntity, Object> join = root.join(searchCriteria.getKey());
-            query.distinct(true);
-            return builder.in(join.get("id")).value(searchCriteria.getValue());
-        }
+        	if(searchCriteria.getKey().equals("sourceOrigin")) {
+        		System.out.println("chanvl");
+        		return builder.in(root.get(searchCriteria.getKey())).value(searchCriteria.getValue());
+        	}else {
+        	     Join<ProductEntity, Object> join = root.join(searchCriteria.getKey());
+                 query.distinct(true);
+                 return builder.in(join.get("id")).value(searchCriteria.getValue());
+        	}
+       
+        }else if(searchCriteria.getOperation().equalsIgnoreCase("in2")) {
+        	
+        }		
         else if (searchCriteria.getOperation().equalsIgnoreCase("between")) {
             List<Long> priceRange = (List<Long>) searchCriteria.getValue();
             System.out.println("size"+priceRange.size());

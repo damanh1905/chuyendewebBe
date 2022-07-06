@@ -55,8 +55,11 @@ public class ShoppingCartController {
     @GetMapping("/listCart")
     public ResponseEntity<?> getShoppingCart(){
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+        	 System.out.println("AnonyMouse");
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            
         }
+        System.out.println("List Cartttttt");
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ChangeToCartResponse> toCartResponseList =  iShoppingCartService.showCart(userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(
