@@ -28,7 +28,7 @@ public class ShoppingCartController {
     public ResponseEntity<?> changeToCart(@RequestParam(required = false) String action,
                                           @RequestBody(required = false) ChangeToCartReq changeToCartReq) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-            throw new NotFoundException("please login to purchase!");
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
             CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

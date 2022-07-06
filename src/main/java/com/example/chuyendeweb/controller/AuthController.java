@@ -78,6 +78,31 @@ public class AuthController {
                         userDetails.getUsername(), userDetails.getEmail(), roles));
     }
 
+    @PostMapping("/admin/login")
+    public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginReq LoginReq, HttpServletResponse response) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) this.authuticate(LoginReq.getUsername(),
+                LoginReq.getPassword());
+        String jwt = jwtUtils.generateJwtToken(userDetails);
+
+        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+        System.out.println(roles.size());
+        JwtResponse jwtResponse = null;
+        for (int i = 0; i < roles.size(); i++) {
+            System.out.println(roles.get(i));
+            if (roles.get(i).equals("ROLE_ADMIN")) {
+                RefreshTokenEntity refreshToken = refreshTokenService.finByIdUserEntity(userDetails.getId());
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(new JwtResponse(HttpStatus.OK.value(), jwt, refreshToken.getToken(),
+                                userDetails.getId(),
+                                userDetails.getUsername(), userDetails.getEmail(), roles));
+            }
+        }
+
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterReq RegisterReq)
             throws MessagingException, IOException {
