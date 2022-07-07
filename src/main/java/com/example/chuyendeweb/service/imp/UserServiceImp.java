@@ -91,6 +91,8 @@ public class UserServiceImp implements IUserService {
     @Override
     public String registerEmail(RegisterEmail registerEmail) throws MessagingException, IOException {
         UserEntity user = new UserEntity(registerEmail.getName(), registerEmail.getEmail());
+        user.setAddress("Ho Chi Minh");
+        user.setStatuss("Active");
         user.setEnabled(false);
         setVerifyCodeEmail(user);
         // case time ơ day

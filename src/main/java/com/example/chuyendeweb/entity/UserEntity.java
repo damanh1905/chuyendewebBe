@@ -48,9 +48,9 @@ public class UserEntity extends BaseEntity {
     private int verifiForgot;
     @Column
     private String statuss;
-    @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "userEntity",cascade = CascadeType.REMOVE)
     private CartEntity cartEntity;
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
     private RefreshTokenEntity refreshToken;
     @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
     private WishListEntity wishList;

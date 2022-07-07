@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,28 +44,27 @@ public class ManageUserAdmin {
 	RoleRepository roleRepo;
 	@GetMapping("/findAllUsers")
 	public ResponseEntity<?> findAllUsers(@RequestParam(defaultValue = "0") int pageIndex,	@RequestParam(defaultValue = "12") int pageSize,@RequestParam(required = false) List<String> sortBy){
-//		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-//			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("chua dang nhap ma ba");
-//		}
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+		}
 		Map<String, Object> listUser=iUserService.showListUser(pageIndex,pageSize);
-		System.out.println(listUser);
-
+		 if (listUser == null)
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                             .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found list User",
+                                             ""));
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(new ResponseObject(HttpStatus.OK.value(), "", listUser));
+				.body(new ResponseObject(HttpStatus.OK.value(), "successfull", listUser));
 		
 	}
 	@PostMapping("/deleteUsers")
 	public ResponseEntity<?> deletelistUser(@RequestParam("listId") Long [] ids){
-//		this.iUserService.deleteUsers(ids);
-//	this.userRepository.deleteOneById(id);
-		try {
+
 			this.iUserService.deleteIds(ids);
 
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+	
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(new ResponseObject(HttpStatus.OK.value(), "", "hihi"));
+				.body(new ResponseObject(HttpStatus.OK.value(), "delete Successfull", "delete Successfull"));
+		
 		
 	}
 	@PostMapping("userDetail/{id}")
@@ -72,22 +72,15 @@ public class ManageUserAdmin {
 		System.out.println(id);
 		UserEntity user=this.iUserService.findById(id);
 		AdminUserResponse userResponse=mapper.map(user, AdminUserResponse.class);
-		
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new ResponseObject(HttpStatus.OK.value(), "", userResponse));
-	}
-	@PostMapping("postUser")
-	public ResponseEntity<?> postUser(@RequestBody UserReponse userResponse,@RequestParam("roleId") Long roleId){
-		if(roleId==1) {
-			UserEntity user=mapper.map(userResponse,UserEntity.class);
-			RoleEntity role=roleRepo.findByName(ERole.ROLE_USER).get();
-			Set<RoleEntity> set=new HashSet<RoleEntity>();
-			user.setRoles(set);
-			userRepository.save(user);
+		if (userResponse==null) {
+			  return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                      .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found list User",
+                                      ""));
 		}
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(new ResponseObject(HttpStatus.OK.value(), "", userResponse));
+				.body(new ResponseObject(HttpStatus.OK.value(), "show User Detail Successfull", userResponse));
 	}
+
 		
 	}
 	

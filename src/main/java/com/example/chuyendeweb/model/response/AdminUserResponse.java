@@ -1,5 +1,6 @@
 package com.example.chuyendeweb.model.response;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,12 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class AdminUserResponse {
-    String userName;
-    String email;
-    String phone;
-    String gender;
+	private Long id;
+    private String userName;
+    private String email;
+    private String phone;
+    private String gender;
     private String statuss;
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Date dateCreated;
+    
     
 
 }

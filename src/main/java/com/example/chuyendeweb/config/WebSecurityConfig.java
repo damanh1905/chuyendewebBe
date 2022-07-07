@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/admin/**").hasRole("ADMIN")
 //                .antMatchers("/api/cart/**").hasRole("USER")
 //                .antMatchers("/api/mod/**").hasRole("MODERATOR")
-               .antMatchers("/manage/admin/**").permitAll()
+               .antMatchers("/manage/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
