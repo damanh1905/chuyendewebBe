@@ -1,14 +1,22 @@
 package com.example.chuyendeweb.service.imp;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.mail.MessagingException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +29,8 @@ import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.RegisterEmail;
 import com.example.chuyendeweb.model.request.RegisterReq;
 import com.example.chuyendeweb.model.request.ResetPasswordRequest;
+import com.example.chuyendeweb.model.response.AdminUserResponse;
+import com.example.chuyendeweb.model.response.UserReponse;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.RefreshTokenRepository;
 import com.example.chuyendeweb.repository.RoleRepository;
@@ -31,6 +41,8 @@ import com.example.chuyendeweb.util.SendEmailUtils;
 
 @Service
 public class UserServiceImp implements IUserService {
+	@Autowired
+	ModelMapper mapper;	
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -45,9 +57,9 @@ public class UserServiceImp implements IUserService {
     private RefreshTokenService refreshTokenService;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+    
     @Value("${jtw.app.timeVerifycode}")
     private int timeVerifyCode;
-
     @Override
     public String registerUser(RegisterReq RegisterReq) throws IOException, MessagingException {
         // if (userRepository.existsByUserName(RegisterReq.getUsername())) {
@@ -304,4 +316,35 @@ public class UserServiceImp implements IUserService {
     public boolean finByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+	@Override
+	public Map<String, Object> showListUser(int pageIndex, int pageSize) {
+		   Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		   Map<String, Object> result = new HashMap<>();
+		   Page<UserEntity> pageTuts ;
+		    pageTuts = this.userRepository.findAll(pageable);
+		    List<UserEntity> listUser=pageTuts.getContent();
+		    List<AdminUserResponse> listResponseUser=new ArrayList<AdminUserResponse>();
+		    for (UserEntity userEntity : listUser) {
+		    	listResponseUser.add(mapper.map(userEntity, AdminUserResponse.class));
+			}
+		    
+		 
+		   result.put("listUser", listResponseUser);
+	        result.put("curerentPage", pageTuts.getNumber());
+	        result.put("totalitems", pageTuts.getTotalElements());
+	        result.put("totalPage", pageTuts.getTotalPages());
+		return result;
+	}
+
+	@Override
+	public void deleteIds(Long[] ids) {
+			for (Long id : ids) {
+				System.out.println(id);
+				this.userRepository.deleteOneById(id);
+			}
+		
+	}
+
+
 }

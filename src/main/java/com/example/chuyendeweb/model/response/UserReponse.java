@@ -12,8 +12,14 @@ public class UserReponse {
         this.phone = phone;
         this.gender = gender;
     }
+    
 
-    public String getUserName() {
+    public UserReponse() {
+		super();
+	}
+
+
+	public String getUserName() {
         return userName;
     }
 

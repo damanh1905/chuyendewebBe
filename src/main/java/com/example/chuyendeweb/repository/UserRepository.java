@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findById(Long id);
@@ -29,6 +31,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByVerifiForgot(int verifiForgot);
 
 	UserEntity findOnedById(Long id);
+
+	@Transactional
+	void deleteOneById(Long id);
+
+	
 
 
 

@@ -5,6 +5,7 @@ import com.example.chuyendeweb.model.request.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.Map;
 
 public interface IUserService {
     UserEntity findById(Long id);
@@ -34,5 +35,10 @@ public interface IUserService {
     UserEntity saveAndFlush(UserEntity user);
 
     UserEntity setUserToGG(String username, String email);
+
+	Map<String, Object> showListUser(int pageIndex, int pageSize);
+
+
+	void deleteIds(Long[] ids);
 
 }

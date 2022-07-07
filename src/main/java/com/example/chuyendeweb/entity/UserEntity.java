@@ -48,14 +48,14 @@ public class UserEntity extends BaseEntity {
     private int verifiForgot;
     @Column
     private String statuss;
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
     private CartEntity cartEntity;
     @OneToOne(mappedBy = "userEntity")
     private RefreshTokenEntity refreshToken;
-    @OneToOne(mappedBy = "userEntity")
+    @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
     private WishListEntity wishList;
     
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL)
 	List<SellEntity> listSellEntity;
 
     public UserEntity(String username, String email, String password) {
