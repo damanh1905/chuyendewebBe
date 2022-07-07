@@ -88,7 +88,7 @@ public class ProductServiceImp implements IProductService {
                         break;
                     case "categoryId":
                         // System.out.println("key" + key);
-                        // System.out.println("categoryNe" + category);
+                         System.out.println("categoryNe" + category);
                         specBuilder.with("categoryEntity", "in", category);
                         break;
                     // case "ageIds":
@@ -104,9 +104,7 @@ public class ProductServiceImp implements IProductService {
                     case "brand":
                     	System.out.println("branddd");
                     	System.out.println(brandProducts);
-                        for (String string : brandProducts) {
-                        	 specBuilder.with("sourceOrigin", "=", string);
-						}
+                        	 specBuilder.with("sourceOrigin","in", brandProducts);
                     	break;
                     case "order":
                         System.out.println("key" + key);

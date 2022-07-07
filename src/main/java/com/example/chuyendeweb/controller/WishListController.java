@@ -44,8 +44,10 @@ public class WishListController {
     @GetMapping("/addWishList")
     public ResponseEntity<?> addWishList(@RequestParam(value = "iDProduct") Long id) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+        	System.out.println("UnAuthorwired");
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        System.out.println("userDEtail");
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         ProductEntity toCartResponse = iWishListService.addProductWishList(userDetails.getId(), id);

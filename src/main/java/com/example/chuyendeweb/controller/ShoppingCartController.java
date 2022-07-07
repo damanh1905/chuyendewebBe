@@ -28,7 +28,7 @@ public class ShoppingCartController {
     public ResponseEntity<?> changeToCart(@RequestParam(required = false) String action,
                                           @RequestBody(required = false) ChangeToCartReq changeToCartReq) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
-            throw new NotFoundException("please login to purchase!");
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
             CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -55,8 +55,11 @@ public class ShoppingCartController {
     @GetMapping("/listCart")
     public ResponseEntity<?> getShoppingCart(){
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+        	 System.out.println("AnonyMouse");
             return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            
         }
+        System.out.println("List Cartttttt");
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ChangeToCartResponse> toCartResponseList =  iShoppingCartService.showCart(userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(
