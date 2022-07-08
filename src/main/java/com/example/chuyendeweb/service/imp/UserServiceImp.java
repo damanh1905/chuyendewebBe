@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.chuyendeweb.common.ERole;
 import com.example.chuyendeweb.entity.CartEntity;
+import com.example.chuyendeweb.entity.OrderEntity;
 import com.example.chuyendeweb.entity.RefreshTokenEntity;
 import com.example.chuyendeweb.entity.RoleEntity;
 import com.example.chuyendeweb.entity.UserEntity;
@@ -34,6 +35,7 @@ import com.example.chuyendeweb.model.response.UserReponse;
 import com.example.chuyendeweb.repository.CartRepository;
 import com.example.chuyendeweb.repository.RefreshTokenRepository;
 import com.example.chuyendeweb.repository.RoleRepository;
+import com.example.chuyendeweb.repository.OrderRepository;
 import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.RefreshTokenService;
 import com.example.chuyendeweb.service.IUserService;
@@ -41,6 +43,8 @@ import com.example.chuyendeweb.util.SendEmailUtils;
 
 @Service
 public class UserServiceImp implements IUserService {
+	@Autowired
+	OrderRepository orderRepo;
 	@Autowired
 	ModelMapper mapper;	
     @Autowired
@@ -57,6 +61,7 @@ public class UserServiceImp implements IUserService {
     private RefreshTokenService refreshTokenService;
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+  
     
     @Value("${jtw.app.timeVerifycode}")
     private int timeVerifyCode;
@@ -330,9 +335,21 @@ public class UserServiceImp implements IUserService {
 		    for (UserEntity userEntity : listUser) {
 		    	listResponseUser.add(mapper.map(userEntity, AdminUserResponse.class));
 			}
-		    
-		 
-		   result.put("listUser", listResponseUser);
+		    for (AdminUserResponse adminUserResponse : listResponseUser) {
+					Long id=adminUserResponse.getId();
+					List<OrderEntity> listOrder=orderRepo.findByUserEntityId(id);
+					long totalPrice = 0;
+					int totalProduct = 0;
+					for (OrderEntity order : listOrder) {
+						
+						 totalPrice+=order.getTotalPriceOrder();
+						totalProduct+=1;
+					}
+					adminUserResponse.setTotalOrder(totalProduct);
+					adminUserResponse.setTotalPrice(totalPrice);
+					
+			}
+		    result.put("listUser", listResponseUser);
 	        result.put("curerentPage", pageTuts.getNumber());
 	        result.put("totalitems", pageTuts.getTotalElements());
 	        result.put("totalPage", pageTuts.getTotalPages());

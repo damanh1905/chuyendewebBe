@@ -21,6 +21,8 @@ public class AdminUserResponse {
     private String gender;
     private String statuss;
     private Date dateCreated;
+    private int totalOrder;
+    private long totalPrice;
     
     
 

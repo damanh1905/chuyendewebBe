@@ -2,6 +2,7 @@ package com.example.chuyendeweb.service;
 
 import java.util.List;
 
+import com.example.chuyendeweb.entity.OrderDetailEntity;
 import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
 import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.security.CustomUserDetails;
@@ -12,4 +13,6 @@ public interface IOrderService {
 	List<ChangeToOrderResponseByUser> showListOrderByUserId(CustomUserDetails userDetails);
 
 	void deleteOrderByOrderId(Long orderId);
+
+	
 }

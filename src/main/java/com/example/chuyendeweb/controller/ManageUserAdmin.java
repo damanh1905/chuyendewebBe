@@ -22,13 +22,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.chuyendeweb.common.ERole;
+import com.example.chuyendeweb.entity.OrderDetailEntity;
+import com.example.chuyendeweb.entity.OrderEntity;
 import com.example.chuyendeweb.entity.RoleEntity;
 import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.model.response.AdminUserResponse;
+import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.model.response.ResponseObject;
 import com.example.chuyendeweb.model.response.UserReponse;
 import com.example.chuyendeweb.repository.RoleRepository;
 import com.example.chuyendeweb.repository.UserRepository;
+import com.example.chuyendeweb.security.CustomUserDetails;
+import com.example.chuyendeweb.service.IOrderService;
 import com.example.chuyendeweb.service.IUserService;
 
 @RestController
@@ -42,6 +47,8 @@ public class ManageUserAdmin {
 	ModelMapper mapper;
 	@Autowired
 	RoleRepository roleRepo;
+	@Autowired 
+	IOrderService iOrderService;
 	@GetMapping("/findAllUsers")
 	public ResponseEntity<?> findAllUsers(@RequestParam(defaultValue = "0") int pageIndex,	@RequestParam(defaultValue = "12") int pageSize,@RequestParam(required = false) List<String> sortBy){
 		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
@@ -58,7 +65,9 @@ public class ManageUserAdmin {
 	}
 	@PostMapping("/deleteUsers")
 	public ResponseEntity<?> deletelistUser(@RequestParam("listId") Long [] ids){
-
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+		}
 			this.iUserService.deleteIds(ids);
 
 	
@@ -69,6 +78,9 @@ public class ManageUserAdmin {
 	}
 	@PostMapping("userDetail/{id}")
 	public ResponseEntity<?> userDetail(@PathVariable("id") Long id){
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+		}
 		System.out.println(id);
 		UserEntity user=this.iUserService.findById(id);
 		AdminUserResponse userResponse=mapper.map(user, AdminUserResponse.class);
@@ -80,7 +92,17 @@ public class ManageUserAdmin {
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ResponseObject(HttpStatus.OK.value(), "show User Detail Successfull", userResponse));
 	}
-
+	@PostMapping("listOrderByUser/{id}")
+	public ResponseEntity<?> listOrderDetailByUser(@PathVariable("id") Long id){
+		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+		}
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		List<ChangeToOrderResponseByUser> listDetail=iOrderService.showListOrderByUserId(userDetails);
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(new ResponseObject(HttpStatus.OK.value(), "show User Detail Successfull", listDetail));
+	}
 		
 	}
 	
