@@ -1,6 +1,7 @@
 package com.example.chuyendeweb.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.chuyendeweb.entity.OrderDetailEntity;
 import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
@@ -13,6 +14,8 @@ public interface IOrderService {
 	List<ChangeToOrderResponseByUser> showListOrderByUserId(CustomUserDetails userDetails);
 
 	void deleteOrderByOrderId(Long orderId);
+
+	Map<String, Object> showListOdersAdmin(int pageIndex, int pageSize);
 
 	
 }

@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long>{
 	List<OrderEntity> findByUserEntityId(Long id);
 	@Transactional
 	void deleteOneById(Long orderId);
+
+	OrderEntity findOneById(Long id);
 }
