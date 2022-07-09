@@ -2,10 +2,15 @@ package com.example.chuyendeweb.service.imp;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.chuyendeweb.entity.ImageSell;
@@ -13,6 +18,7 @@ import com.example.chuyendeweb.entity.OrderEntity;
 import com.example.chuyendeweb.entity.SellEntity;
 import com.example.chuyendeweb.entity.UserEntity;
 import com.example.chuyendeweb.model.request.ChangeToSellReq;
+import com.example.chuyendeweb.model.response.AdminSellResponse;
 import com.example.chuyendeweb.model.response.ChangeToListSellResponse;
 import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.repository.SellImageRepository;
@@ -72,6 +78,27 @@ public class SellIml implements ISellService{
 	public void deleteSellBySellId(Long sellId) {
 		sellRepository.deleteOneById(sellId);
 		
+	}
+	@Override
+	public Map<String, Object> showListSellAdmin(int pageIndex, int pageSize) {
+		Map<String, Object> result=new HashMap<String, Object>();
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		Page<SellEntity> pageTuts;
+		pageTuts=sellRepository.findAll(pageable);
+		List<SellEntity> listSell=pageTuts.getContent();
+		List<AdminSellResponse> listResponse=new ArrayList<AdminSellResponse>();
+		for (SellEntity sellEntity : listSell) {
+			listResponse.add(mapper.map(sellEntity, AdminSellResponse.class));
+		}
+		result.put("listSell", listResponse);
+	
+		return result;
+		
+	}
+	@Override
+	public SellEntity findOneSell(Long id) {
+			SellEntity sell=sellRepository.findById(id).get();
+		return sell;
 	}
 
 }

@@ -34,6 +34,7 @@ import com.example.chuyendeweb.repository.RoleRepository;
 import com.example.chuyendeweb.repository.UserRepository;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IOrderService;
+import com.example.chuyendeweb.service.IProductService;
 import com.example.chuyendeweb.service.IUserService;
 
 @RestController
@@ -89,11 +90,24 @@ public class ManageUserAdmin {
                       .body(new ResponseObject(HttpStatus.NOT_FOUND.value(), "Not found list User",
                                       ""));
 		}
+		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+//		xu li toang tien va tong don hang
+		List<ChangeToOrderResponseByUser> list=iOrderService.showListOrderByUserId(userDetails);
+		int total=0;
+		int totalOrder=0;
+		for (ChangeToOrderResponseByUser changeToOrderResponseByUser : list) {
+				total+=changeToOrderResponseByUser.getTotalPriceOrder();
+				totalOrder+=1;
+		}
+		userResponse.setTotalPrice(total);
+		userResponse.setTotalOrder(totalOrder);
+//
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(new ResponseObject(HttpStatus.OK.value(), "show User Detail Successfull", userResponse));
 	}
-	@PostMapping("listOrderByUser/{id}")
-	public ResponseEntity<?> listOrderDetailByUser(@PathVariable("id") Long id){
+	@PostMapping("listOrderByUser")
+	public ResponseEntity<?> listOrderDetailByUser(){
 		if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
 			return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
 		}
