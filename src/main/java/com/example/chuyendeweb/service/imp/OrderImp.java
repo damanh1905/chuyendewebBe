@@ -128,4 +128,16 @@ public class OrderImp implements IOrderService {
 		return result;
 	}
 
+	@Override
+	public List<ChangeToOrderResponseByUser> showListOrderByUserIdAdmin(Long id) {
+		UserEntity user = userRepo.findOnedById(id);
+		List<OrderEntity> orders = repositoryOrder.findByUserEntityId(user.getId());
+//		 System.out.println(user);
+		List<ChangeToOrderResponseByUser> result = new ArrayList<>();
+		for (OrderEntity order : orders) {
+			result.add(this.mapper.map(order, ChangeToOrderResponseByUser.class));
+		}
+		return result;
+	}
+
 }

@@ -17,5 +17,7 @@ public interface IOrderService {
 
 	Map<String, Object> showListOdersAdmin(int pageIndex, int pageSize);
 
+	List<ChangeToOrderResponseByUser> showListOrderByUserIdAdmin(Long id);
+
 	
 }
