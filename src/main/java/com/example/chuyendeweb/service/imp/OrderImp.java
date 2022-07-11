@@ -1,10 +1,7 @@
 package com.example.chuyendeweb.service.imp;
 
 import com.example.chuyendeweb.entity.*;
-import com.example.chuyendeweb.model.response.AdminChartResponse;
-import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
-import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
-import com.example.chuyendeweb.model.response.ListOrderAdminResponse;
+import com.example.chuyendeweb.model.response.*;
 import com.example.chuyendeweb.repository.*;
 import com.example.chuyendeweb.security.CustomUserDetails;
 import com.example.chuyendeweb.service.IOrderService;
@@ -18,11 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderImp implements IOrderService {
@@ -44,6 +37,8 @@ public class OrderImp implements IOrderService {
 	ModelMapper mapper;
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	CategoryRepository categoryRepository;
 
 	@Override
 	public List<AdminChartResponse> getChartDayMonth( int month,int year) throws ParseException {
@@ -168,6 +163,67 @@ public class OrderImp implements IOrderService {
 			result.add(this.mapper.map(order, ChangeToOrderResponseByUser.class));
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Double> getChartDayMonthCi(int month, int year) {
+		Map<String,Double> map = new HashMap<>();
+		List<AdminChartCiResponse> result = new ArrayList<>();
+//		List<String> listString = new ArrayList<>();
+//		listString.add("accessories");
+//		listString.add("outerwear");
+//		listString.add("footwear");
+//		listString.add("tops");
+//		listString.add("bottoms");
+		map.put("accessories",0.0);
+		map.put("outerwear",0.0);
+		map.put("footwear",0.0);
+		map.put("tops",0.0);
+		map.put("bottoms",0.0);
+		List<OrderDetailEntity> orderDetailEntities = orderDetailRepo.findAllByDateCreated(month,year);
+		List<OrderEntity> orderEntities = repositoryOrder.findAllByDateCreated(month,year);
+
+		double totalOrder = 0;
+
+		for (OrderEntity orderEntity:orderEntities) {
+			totalOrder += orderEntity.getTotalPriceOrder();
+		}
+		for (OrderDetailEntity orderDetailEntity:orderDetailEntities) {
+			long idCategory = orderDetailEntity.getProductEntity().getCategoryEntity().getId();
+
+			String nameCatogery = this.categoryRepository.findById(idCategory).get().getNameCategory();
+//			for (Map.Entry<String, Double> entry : map.entrySet()) {
+				double totalOderDetail = 0;
+				if(map.containsKey(nameCatogery)){
+					totalOderDetail += orderDetailEntity.getTotalOrderDetailPrice()*orderDetailEntity.getQuantity()+map.get(nameCatogery);
+
+					System.out.println( totalOderDetail);
+				}else {
+					totalOderDetail= 0;
+				}
+				map.put(nameCatogery,totalOderDetail);
+//			}
+
+//				if(nameCatogery.equals(title)){
+//					totalOderDetail += orderDetailEntity.getTotalOrderDetailPrice()*orderDetailEntity.getQuantity() ;
+//				}else{
+//					totalOderDetail = 0;
+//				}
+
+
+//
+//			for (Map.Entry<String, Double> entry : map.entrySet()) {
+////				System.out.println(entry.getKey() + " " + entry.getValue());
+//				result.add(new AdminChartCiResponse(entry.getKey(),entry.getValue()));
+//			}
+		}
+//		for (AdminChartCiResponse chartCiResponse: result) {
+//
+//		}
+
+		return map;
+
+
 	}
 
 }
