@@ -23,7 +23,13 @@ public interface IOrderService {
 	Map<String, Object> showListOdersAdmin(int pageIndex, int pageSize);
 
 
+
 	List<AdminChartResponse> getChartDay(int day,int month) throws ParseException;
+
+
+
+
+
 	List<ChangeToOrderResponseByUser> showListOrderByUserIdAdmin(Long id);
 
 
