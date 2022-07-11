@@ -157,9 +157,7 @@ public class OrderImp implements IOrderService {
 		return result;
 	}
 
-<<<<<<< HEAD
 
-=======
 	@Override
 	public List<ChangeToOrderResponseByUser> showListOrderByUserIdAdmin(Long id) {
 		UserEntity user = userRepo.findOnedById(id);
@@ -171,6 +169,5 @@ public class OrderImp implements IOrderService {
 		}
 		return result;
 	}
->>>>>>> daaca826ea7195868eee2a7ccc026638dc13986e
 
 }
