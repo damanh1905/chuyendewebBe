@@ -73,7 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("api/chart/admin/**").hasRole("ADMIN")
 
 
-                .antMatchers("api/chart/admin/**").hasRole("ADMIN")
+              
 
                .antMatchers("/sell/admin/**").hasRole("ADMIN")
 
