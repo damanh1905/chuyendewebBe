@@ -21,7 +21,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Table(name = "orderDetail")
 public class OrderDetailEntity extends BaseEntity {
 	private int quantity;

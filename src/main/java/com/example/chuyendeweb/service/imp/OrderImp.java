@@ -1,6 +1,7 @@
 package com.example.chuyendeweb.service.imp;
 
 import com.example.chuyendeweb.entity.*;
+import com.example.chuyendeweb.model.response.AdminChartResponse;
 import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
 import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.model.response.ListOrderAdminResponse;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +45,32 @@ public class OrderImp implements IOrderService {
 	@Autowired
 	UserRepository userRepo;
 
+	@Override
+	public List<AdminChartResponse> getChartDayMonth( int month,int year) throws ParseException {
+		List<OrderEntity> pageTuts = null;
+
+//			pageTuts = repositoryOrder.findAllByDateCreated(new SimpleDateFormat("yyyy-MM-dd").parse("2022-" + month + "-" + day));
+			pageTuts = repositoryOrder.findAllByDateCreated(month,year);
+			System.out.println(pageTuts);
+
+
+		List<AdminChartResponse> listOrderAdmin = new ArrayList<AdminChartResponse>();
+		for (OrderEntity orderEntity : pageTuts) {
+			listOrderAdmin.add(mapper.map(orderEntity, AdminChartResponse.class));
+		}
+
+		return listOrderAdmin;
+	}
+	@Override
+	public List<AdminChartResponse> getChartDay(int day,int month) throws ParseException {
+		List<OrderEntity> pageTuts = repositoryOrder.findAllByDateCreated(new SimpleDateFormat("yyyy-MM-dd").parse("2022-"+month + "-" + day));
+		List<AdminChartResponse> listOrderAdmin = new ArrayList<AdminChartResponse>();
+		for (OrderEntity orderEntity : pageTuts) {
+			listOrderAdmin.add(mapper.map(orderEntity, AdminChartResponse.class));
+		}
+
+		return listOrderAdmin;
+	}
 	@Override
 	public void saveToOrder(CustomUserDetails userDetails, ChangeToOrderRequest changeToOrderRequest) {
 		OrderEntity order = new OrderEntity();
@@ -127,5 +156,7 @@ public class OrderImp implements IOrderService {
 		result.put("totalPage", pageTuts.getTotalPages());
 		return result;
 	}
+
+
 
 }
