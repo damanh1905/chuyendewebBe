@@ -21,7 +21,7 @@ import com.example.chuyendeweb.service.IOrderDetailService;
 import com.example.chuyendeweb.service.IOrderService;
 
 @RestController
-@RequestMapping("/order/admin")
+@RequestMapping("api/order/admin")
 public class ManageOrderAdmin {
 	@Autowired
 	IOrderService orderService;

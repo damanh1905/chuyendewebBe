@@ -57,6 +57,9 @@ public class UserEntity extends BaseEntity {
     
     @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL)
 	List<SellEntity> listSellEntity;
+    
+    @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL)
+   	List<OrderEntity> listOrders;
 
     public UserEntity(String username, String email, String password) {
         this.userName = username;

@@ -66,10 +66,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/admin/**").hasRole("ADMIN")
 //                .antMatchers("/api/cart/**").hasRole("USER")
 //                .antMatchers("/api/mod/**").hasRole("MODERATOR")
-               .antMatchers("/manage/admin/**").hasRole("ADMIN")
-               .antMatchers("/order/admin/**").hasRole("ADMIN")
+               .antMatchers("api/manage/admin/**").hasRole("ADMIN")
+               .antMatchers("api/order/admin/**").hasRole("ADMIN")
                .antMatchers("/product/admin/**").hasRole("ADMIN")
+<<<<<<< HEAD
                 .antMatchers("api/chart/admin/**").hasRole("ADMIN")
+=======
+               .antMatchers("/sell/admin/**").hasRole("ADMIN")
+>>>>>>> daaca826ea7195868eee2a7ccc026638dc13986e
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

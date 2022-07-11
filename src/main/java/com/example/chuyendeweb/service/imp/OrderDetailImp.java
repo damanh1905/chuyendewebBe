@@ -50,7 +50,7 @@ public class OrderDetailImp implements IOrderDetailService {
 				
 			}
 			OrderEntity order=orderRepo.findOneById(id);
-			result.put("listOrderDetail", listOrderDetail);
+			result.put("listOrderDetail", listOrderAdmin);
 			result.put("nameUser", userDetails.getUsername());
 			result.put("idUser", userDetails.getId());
 			result.put("addressOrder", order.getAddress());
