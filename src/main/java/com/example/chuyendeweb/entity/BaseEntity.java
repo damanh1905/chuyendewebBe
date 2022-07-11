@@ -17,7 +17,8 @@ public abstract class BaseEntity {
     @Column
     private String createdBy;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Temporal(TemporalType.DATE)
     @Column(name = "dateCreated")
     private Date dateCreated;
 

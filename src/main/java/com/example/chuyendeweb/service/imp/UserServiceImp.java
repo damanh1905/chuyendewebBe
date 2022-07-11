@@ -155,16 +155,16 @@ public class UserServiceImp implements IUserService {
                 // disabled");
                 return false;
             } else {
-                if (checkTimeVerifyCode(user)) {
+//                if (checkTimeVerifyCode(user)) {
                     user.setVerificationCode(0);
                     user.setEnabled(true);
                     userRepository.save(user);
                     return true;
-                } else {
-                    // throw new NotFoundException("verificationCode token was expired. Please make
-                    // a new refeshVerifyCode");
-                    return false;
-                }
+//                } else {
+//                    // throw new NotFoundException("verificationCode token was expired. Please make
+//                    // a new refeshVerifyCode");
+//                    return false;
+//                }
 
             }
         } catch (NullPointerException ex) {

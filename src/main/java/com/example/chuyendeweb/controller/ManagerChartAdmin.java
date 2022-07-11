@@ -1,0 +1,58 @@
+package com.example.chuyendeweb.controller;
+
+import com.example.chuyendeweb.entity.OrderEntity;
+import com.example.chuyendeweb.model.response.AdminChartResponse;
+import com.example.chuyendeweb.model.response.ResponseObject;
+import com.example.chuyendeweb.service.IOrderDetailService;
+import com.example.chuyendeweb.service.IOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/chart/admin")
+public class ManagerChartAdmin {
+    @Autowired
+    private IOrderService iOrderService;
+
+    @GetMapping("/getChartDayMonth")
+    public ResponseEntity<?> getChartDayMonth(@RequestParam(required = false) int month,@RequestParam int year) throws ParseException {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+        }
+        List<AdminChartResponse> entityList = iOrderService.getChartDayMonth( month,year);
+        if(entityList != null ){
+            System.out.println("aaaaa");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject(HttpStatus.OK.value(), "show listChart successful!", entityList));
+
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("không tìm thấy đơn hàng nào");
+
+    }
+    @GetMapping("/getChartDay")
+    public ResponseEntity<?> getChartDay(@RequestParam(required = false) int day,int month) throws ParseException {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")) {
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn chưa đăng nhập");
+        }
+        List<AdminChartResponse> entityList = iOrderService.getChartDay(day,month);
+        if(entityList != null ){
+            System.out.println("aaaaa");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject(HttpStatus.OK.value(), "show listChart successful!", entityList));
+
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("không tìm thấy đơn hàng nào");
+
+    }
+}
