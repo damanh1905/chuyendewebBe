@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.chuyendeweb.entity.OrderDetailEntity;
+import com.example.chuyendeweb.model.response.AdminChartCiResponse;
 import com.example.chuyendeweb.model.response.AdminChartResponse;
 import com.example.chuyendeweb.model.response.ChangeToOrderRequest;
 import com.example.chuyendeweb.model.response.ChangeToOrderResponseByUser;
 import com.example.chuyendeweb.security.CustomUserDetails;
 
 public interface IOrderService {
-	List<AdminChartResponse> getChartDayMonth( int month,int year) throws ParseException;
+	AdminChartCiResponse getChartDayMonth( int month,int year) throws ParseException;
 
 	void saveToOrder(CustomUserDetails userDetails, ChangeToOrderRequest changeToOrderRequest);
 
@@ -25,5 +26,6 @@ public interface IOrderService {
 	List<AdminChartResponse> getChartDay(int day,int month) throws ParseException;
 	List<ChangeToOrderResponseByUser> showListOrderByUserIdAdmin(Long id);
 
-	
+
+	Map<String, Double> getChartDayMonthCi(int month, int year);
 }

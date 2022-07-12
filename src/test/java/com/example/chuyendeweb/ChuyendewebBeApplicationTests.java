@@ -117,37 +117,5 @@ class ChuyendewebBeApplicationTests {
         // System.out.println(result);
     }
 
-    @Test
-    void test6() {
-        // LinkedList<Integer> list = new LinkedList();
-        // list.add(9);
-        // list.addFirst(10);
-        // list.add(7);
-        // list.addLast(11);
-        // list.add(8);
-        // System.out.println(list);
-
-        ArrayList<Integer> listLanguages = new ArrayList<Integer>();
-        listLanguages.add(1);
-        listLanguages.add(2);
-        listLanguages.add(3);
-        listLanguages.add(4);
-        listLanguages.add(5);
-        listLanguages.add(6);
-        listLanguages.add(7);
-        listLanguages.add(8);
-        Iterator<Integer> iter = listLanguages.iterator();
-        // ArrayList<Integer> result = new ArrayList();
-        while (iter.hasNext()) {
-            if (iter.next() % 2 == 0) {
-                System.out.println(iter.next());
-                // result.add(iter.next());
-            }
-        }
-        // System.out.println(result);
-
-        int[] a = { 1, 2, 3, 4 };
-        Iterator<int[]> test = Arrays.asList(a).iterator();
-    }
 
 }

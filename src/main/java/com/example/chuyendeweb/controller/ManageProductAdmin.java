@@ -26,7 +26,7 @@ import com.example.chuyendeweb.repository.ProductRepository;
 import com.example.chuyendeweb.service.IProductService;
 
 @RestController
-@RequestMapping("/product/admin")
+@RequestMapping("api/product/admin")
 public class ManageProductAdmin {
 	@Autowired
 	IProductService iProductService;
