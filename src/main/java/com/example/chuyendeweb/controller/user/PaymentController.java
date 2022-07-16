@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.controller;
+package com.example.chuyendeweb.controller.user;
 
 import javax.servlet.http.HttpServletRequest;
 

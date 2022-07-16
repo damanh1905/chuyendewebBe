@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.controller;
+package com.example.chuyendeweb.controller.user;
 
 import com.example.chuyendeweb.entity.ProductEntity;
 import com.example.chuyendeweb.entity.UserEntity;

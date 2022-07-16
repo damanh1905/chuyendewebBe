@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.controller;
+package com.example.chuyendeweb.controller.admin;
 
 import com.example.chuyendeweb.entity.OrderEntity;
 import com.example.chuyendeweb.model.response.AdminChartCiResponse;

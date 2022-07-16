@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.controller;
+package com.example.chuyendeweb.controller.user;
 
 import com.example.chuyendeweb.exception.NotFoundException;
 import com.example.chuyendeweb.model.request.ChangeToCartReq;

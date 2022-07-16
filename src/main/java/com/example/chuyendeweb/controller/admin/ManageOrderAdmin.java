@@ -1,4 +1,4 @@
-package com.example.chuyendeweb.controller;
+package com.example.chuyendeweb.controller.admin;
 
 import java.util.List;
 import java.util.Map;
