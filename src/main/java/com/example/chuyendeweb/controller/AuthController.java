@@ -343,8 +343,9 @@ public class AuthController {
     // page ForgotPassword
     @PostMapping(value = "/resetPassword")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordForEmail resetEmail) {
-        System.out.println(resetEmail);
+        System.out.println(resetEmail.getPassword()+"null");
         UserEntity userEntity = userpRepository.findByEmail(resetEmail.getEmail());
+
         userEntity.setPasswords(encoder.encode(resetEmail.getPassword()));
         userpRepository.save(userEntity);
         return ResponseEntity.status(HttpStatus.OK).body(new String("chinh sua thanh cong"));
