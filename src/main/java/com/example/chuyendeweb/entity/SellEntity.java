@@ -46,5 +46,4 @@ public class SellEntity extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "userId", referencedColumnName = "id")
 	private UserEntity userEntity;
-
 }
