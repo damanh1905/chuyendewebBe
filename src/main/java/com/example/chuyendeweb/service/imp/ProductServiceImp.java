@@ -151,6 +151,7 @@ public class ProductServiceImp implements IProductService {
         result.put("curerentPage", pageTuts.getNumber());
         result.put("totalitems", pageTuts.getTotalElements());
         result.put("totalPage", pageTuts.getTotalPages());
+        result.put("itemInPages", pageTuts.getNumberOfElements());
         return result;
     }
 
