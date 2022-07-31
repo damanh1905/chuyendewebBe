@@ -60,7 +60,7 @@ public class ProductController {
 
         @GetMapping("/productFilter")
         public ResponseEntity<?> ShowProductFilter(@RequestParam Map<String, Object> fiterParams,
-                        @RequestParam(required = false) Long genderId,
+                        @RequestParam(required = false) List<Long> genderId,
                         @RequestParam(required = false) List<Long> category,
                         @RequestParam(required = false) List<Long> priceRanges,
                         @RequestParam(required = false) List<String> ordersProduct,
