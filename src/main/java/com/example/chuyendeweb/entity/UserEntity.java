@@ -1,5 +1,6 @@
 package com.example.chuyendeweb.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,7 @@ public class UserEntity extends BaseEntity {
     @Column
     // @Size(max = 120)
     private String passwords;
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "userRoles", joinColumns = @JoinColumn(name = "userID"), inverseJoinColumns = @JoinColumn(name = "roleID"))
     private Set<RoleEntity> roles = new HashSet<>();
@@ -48,16 +50,20 @@ public class UserEntity extends BaseEntity {
     private int verifiForgot;
     @Column
     private String statuss;
+
     @OneToOne(mappedBy = "userEntity",cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private CartEntity cartEntity;
     @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
+    @JsonIgnore
     private RefreshTokenEntity refreshToken;
     @OneToOne(mappedBy = "userEntity",cascade = CascadeType.ALL)
+    @JsonIgnore
     private WishListEntity wishList;
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL)
 	List<SellEntity> listSellEntity;
-    
+    @JsonIgnore
     @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL)
    	List<OrderEntity> listOrders;
 

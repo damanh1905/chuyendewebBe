@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -42,7 +43,7 @@ public class SellEntity extends BaseEntity {
 //	listImage Sell
 	@OneToMany(mappedBy = "sellEntity",cascade = CascadeType.ALL)
 	List<ImageSell> imageSell;
-
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "userId", referencedColumnName = "id")
 	private UserEntity userEntity;

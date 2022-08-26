@@ -43,57 +43,6 @@ public class OrderImp implements IOrderService {
 	@Override
 	public AdminChartCiResponse getChartDayMonth(int month, int year) throws ParseException {
 		List<OrderEntity> pageTuts = null;
-//		SortedMap<String, Double> map = new TreeMap<>(new Comparator<String>() {
-//			@Override
-//			public int compare(String s1, String s2) {
-//				return s1.compareToIgnoreCase(s2);
-//			}
-//		});
-//		TreeMap<String, Double> map = new TreeMap<>(new AccordingMarks());
-
-//		LinkedHashMap<String, Double> sortmap = new LinkedHashMap<>();
-//
-//		map.entrySet()
-//				.stream()
-//				.sorted(Map.Entry.comparingByKey())
-//				.forEachOrdered(x -> map.put(x.getKey(), x.getValue()));
-//		map.put("1",0.0);
-//		map.put("2",0.0);
-//		map.put("3",0.0);
-//		map.put("4",0.0);
-//		map.put("5",0.0);
-//		map.put("6",0.0);
-//		map.put("7",0.0);
-//		map.put("8",0.0);
-//		map.put("9",0.0);
-//		map.put("10",0.0);
-//		map.put("11",0.0);
-//		map.put("12",0.0);
-//		map.put("13",0.0);
-//		map.put("14",0.0);
-//		map.put("15",0.0);
-//		map.put("16",0.0);
-//		map.put("17",0.0);
-//		map.put("18",0.0);
-//		map.put("19",0.0);
-//		map.put("20",0.0);
-//		map.put("21",0.0);
-//		map.put("22",0.0);
-//		map.put("23",0.0);
-//		map.put("24",0.0);
-//		map.put("25",0.0);
-//		map.put("26",0.0);
-//		map.put("27",0.0);
-//		map.put("28",0.0);
-//		map.put("29",0.0);
-//		map.put("30",0.0);
-
-
-
-
-
-
-
 
 
 		List<String> title = new ArrayList<>();
